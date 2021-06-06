@@ -1,0 +1,4 @@
+# Auto Configure
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+io.github.butkoprojects.bots.TelegramBotOptionsAutoConfiguration,\
+io.github.butkoprojects.bots.TelegramBotAutoConfiguration
