@@ -1,6 +1,6 @@
-package io.github.butkoprojects.bots.constructor.box.annotation;
+package io.github.butkoprojects.bots.api.annotation;
 
-import io.github.butkoprojects.bots.constructor.box.BotRequestMappingCondition;
+import io.github.butkoprojects.bots.api.BotRequestMappingCondition;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

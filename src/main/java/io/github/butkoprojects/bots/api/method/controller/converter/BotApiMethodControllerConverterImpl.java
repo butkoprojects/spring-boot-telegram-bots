@@ -1,7 +1,7 @@
-package io.github.butkoprojects.bots.constructor.box.method.controller.converter;
+package io.github.butkoprojects.bots.api.method.controller.converter;
 
-import io.github.butkoprojects.bots.constructor.box.method.controller.BotApiMethodConditionController;
-import io.github.butkoprojects.bots.constructor.box.method.controller.BotApiMethodController;
+import io.github.butkoprojects.bots.api.method.controller.BotApiMethodConditionController;
+import io.github.butkoprojects.bots.api.method.controller.BotApiMethodController;
 import org.springframework.stereotype.Component;
 
 @Component

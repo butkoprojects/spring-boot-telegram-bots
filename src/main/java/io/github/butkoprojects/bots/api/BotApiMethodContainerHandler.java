@@ -1,6 +1,6 @@
-package io.github.butkoprojects.bots.constructor.box;
+package io.github.butkoprojects.bots.api;
 
-import io.github.butkoprojects.bots.constructor.box.method.controller.BotApiMethodController;
+import io.github.butkoprojects.bots.api.method.controller.BotApiMethodController;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 public interface BotApiMethodContainerHandler {

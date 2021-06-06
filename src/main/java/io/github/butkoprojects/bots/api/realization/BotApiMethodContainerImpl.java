@@ -1,9 +1,9 @@
-package io.github.butkoprojects.bots.constructor.box.realization;
+package io.github.butkoprojects.bots.api.realization;
 
-import io.github.butkoprojects.bots.constructor.box.BotApiMethodContainer;
-import io.github.butkoprojects.bots.constructor.box.exception.BotApiMethodContainerException;
-import io.github.butkoprojects.bots.constructor.box.method.controller.BotApiMethodConditionController;
-import io.github.butkoprojects.bots.constructor.box.method.controller.BotApiMethodController;
+import io.github.butkoprojects.bots.api.exception.BotApiMethodContainerException;
+import io.github.butkoprojects.bots.api.BotApiMethodContainer;
+import io.github.butkoprojects.bots.api.method.controller.BotApiMethodConditionController;
+import io.github.butkoprojects.bots.api.method.controller.BotApiMethodController;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package io.github.butkoprojects.bots.constructor.box;
+package io.github.butkoprojects.bots.api;
 
 import org.telegram.telegrambots.meta.api.objects.Update;
 

@@ -1,13 +1,13 @@
-package io.github.butkoprojects.bots.constructor.box;
+package io.github.butkoprojects.bots.api;
 
-import io.github.butkoprojects.bots.constructor.box.annotation.BotController;
-import io.github.butkoprojects.bots.constructor.box.annotation.BotControllerCondition;
-import io.github.butkoprojects.bots.constructor.box.annotation.BotRequestMapping;
-import io.github.butkoprojects.bots.constructor.box.annotation.BotRequestMappingConditional;
-import io.github.butkoprojects.bots.constructor.box.method.controller.BotApiMethodConditionController;
-import io.github.butkoprojects.bots.constructor.box.method.controller.BotApiMethodController;
-import io.github.butkoprojects.bots.constructor.box.realization.BotApiMethodContainerImpl;
-import io.github.butkoprojects.bots.constructor.box.realization.DefaultBotRequestMappingCondition;
+import io.github.butkoprojects.bots.api.annotation.BotController;
+import io.github.butkoprojects.bots.api.annotation.BotControllerCondition;
+import io.github.butkoprojects.bots.api.annotation.BotRequestMapping;
+import io.github.butkoprojects.bots.api.annotation.BotRequestMappingConditional;
+import io.github.butkoprojects.bots.api.method.controller.BotApiMethodConditionController;
+import io.github.butkoprojects.bots.api.realization.BotApiMethodContainerImpl;
+import io.github.butkoprojects.bots.api.realization.DefaultBotRequestMappingCondition;
+import io.github.butkoprojects.bots.api.method.controller.BotApiMethodController;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;

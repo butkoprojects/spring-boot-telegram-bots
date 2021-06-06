@@ -1,6 +1,6 @@
-package io.github.butkoprojects.bots.constructor.box.annotation;
+package io.github.butkoprojects.bots.api.annotation;
 
-import io.github.butkoprojects.bots.constructor.box.BotRequestMethod;
+import io.github.butkoprojects.bots.api.BotRequestMethod;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

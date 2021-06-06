@@ -1,4 +1,4 @@
-package io.github.butkoprojects.bots.constructor.box.annotation;
+package io.github.butkoprojects.bots.api.annotation;
 
 import org.springframework.stereotype.Component;
 

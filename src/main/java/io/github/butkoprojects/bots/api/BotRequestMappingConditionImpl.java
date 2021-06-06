@@ -1,7 +1,6 @@
-package io.github.butkoprojects.bots.constructor;
+package io.github.butkoprojects.bots.api;
 
-import io.github.butkoprojects.bots.constructor.box.BotRequestMappingCondition;
-import io.github.butkoprojects.bots.constructor.box.annotation.BotControllerCondition;
+import io.github.butkoprojects.bots.api.annotation.BotControllerCondition;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 @BotControllerCondition

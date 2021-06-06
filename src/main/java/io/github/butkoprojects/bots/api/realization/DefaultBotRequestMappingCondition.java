@@ -1,6 +1,6 @@
-package io.github.butkoprojects.bots.constructor.box.realization;
+package io.github.butkoprojects.bots.api.realization;
 
-import io.github.butkoprojects.bots.constructor.box.BotRequestMappingCondition;
+import io.github.butkoprojects.bots.api.BotRequestMappingCondition;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 public class DefaultBotRequestMappingCondition implements BotRequestMappingCondition {

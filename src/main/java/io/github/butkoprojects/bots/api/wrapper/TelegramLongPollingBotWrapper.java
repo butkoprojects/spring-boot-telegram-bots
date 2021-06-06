@@ -1,7 +1,7 @@
-package io.github.butkoprojects.bots.constructor.box.wrapper;
+package io.github.butkoprojects.bots.api.wrapper;
 
-import io.github.butkoprojects.bots.constructor.box.BotApiMethodContainerHandler;
-import io.github.butkoprojects.bots.constructor.box.method.controller.BotApiMethodController;
+import io.github.butkoprojects.bots.api.BotApiMethodContainerHandler;
+import io.github.butkoprojects.bots.api.method.controller.BotApiMethodController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
@@ -38,5 +38,7 @@ public abstract class TelegramLongPollingBotWrapper extends TelegramLongPollingB
         }
     }
 
-    public abstract void updateReceived( Update update );
+    public void updateReceived( Update update ) {
+        System.out.println( "Override updateReceived method for your telegram bot" );
+    }
 }

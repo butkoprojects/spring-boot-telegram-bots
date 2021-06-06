@@ -1,4 +1,4 @@
-package io.github.butkoprojects.bots.constructor.box.exception;
+package io.github.butkoprojects.bots.api.exception;
 
 public class BotApiMethodContainerException extends IllegalArgumentException {
 

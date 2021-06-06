@@ -1,4 +1,4 @@
-package io.github.butkoprojects.bots.constructor.box.method.controller;
+package io.github.butkoprojects.bots.api.method.controller;
 
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;

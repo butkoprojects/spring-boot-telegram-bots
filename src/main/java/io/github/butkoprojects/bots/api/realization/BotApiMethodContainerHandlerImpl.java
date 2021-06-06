@@ -1,11 +1,11 @@
-package io.github.butkoprojects.bots.constructor.box.realization;
+package io.github.butkoprojects.bots.api.realization;
 
-import io.github.butkoprojects.bots.constructor.box.BotApiMethodContainer;
-import io.github.butkoprojects.bots.constructor.box.BotApiMethodContainerHandler;
-import io.github.butkoprojects.bots.constructor.box.method.controller.BotApiMethodConditionController;
-import io.github.butkoprojects.bots.constructor.box.method.controller.BotApiMethodController;
-import io.github.butkoprojects.bots.constructor.box.method.controller.FakeBotApiMethodController;
-import io.github.butkoprojects.bots.constructor.box.method.controller.converter.BotApiMethodControllerConverter;
+import io.github.butkoprojects.bots.api.method.controller.BotApiMethodConditionController;
+import io.github.butkoprojects.bots.api.method.controller.FakeBotApiMethodController;
+import io.github.butkoprojects.bots.api.BotApiMethodContainer;
+import io.github.butkoprojects.bots.api.BotApiMethodContainerHandler;
+import io.github.butkoprojects.bots.api.method.controller.BotApiMethodController;
+import io.github.butkoprojects.bots.api.method.controller.converter.BotApiMethodControllerConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;

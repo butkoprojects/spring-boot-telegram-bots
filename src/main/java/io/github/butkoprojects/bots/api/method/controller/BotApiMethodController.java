@@ -1,8 +1,8 @@
-package io.github.butkoprojects.bots.constructor.box.method.controller;
+package io.github.butkoprojects.bots.api.method.controller;
 
+import io.github.butkoprojects.bots.api.Process;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import io.github.butkoprojects.bots.constructor.box.Process;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
