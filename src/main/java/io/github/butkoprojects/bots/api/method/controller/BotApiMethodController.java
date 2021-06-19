@@ -2,6 +2,7 @@ package io.github.butkoprojects.bots.api.method.controller;
 
 import io.github.butkoprojects.bots.api.Process;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.lang.reflect.InvocationTargetException;
@@ -26,15 +27,23 @@ public class BotApiMethodController {
         this.method = method;
         this.method.setAccessible( true );
 
-        processUpdate = typeListReturnDetect() ? this::processList : this::processSingle;
+        processUpdate = isReturnTypeIsString() ?
+                this::processNonBotApiReturnType :
+                typeListReturnDetect() ?
+                        this::processList :
+                        this::processSingle;
     }
 
-    public List<BotApiMethod> process(Update update ) {
+    public List<BotApiMethod> process( Update update ) {
         try {
             return successUpdate.test( update ) ? processUpdate.accept( update ) : null;
         } catch ( IllegalAccessException | InvocationTargetException e ) {
             throw new IllegalArgumentException( e.getMessage() );
         }
+    }
+
+    boolean isReturnTypeIsString() {
+        return String.class.equals( method.getReturnType() );
     }
 
     boolean typeListReturnDetect() {
@@ -49,5 +58,26 @@ public class BotApiMethodController {
     private List<BotApiMethod> processList(Update update ) throws InvocationTargetException, IllegalAccessException {
         List<BotApiMethod> botApiMethods = (List<BotApiMethod>) method.invoke( bean, update );
         return botApiMethods != null ? botApiMethods : new ArrayList<>( 0 );
+    }
+
+    private List<BotApiMethod> processNonBotApiReturnType( Update update ) throws InvocationTargetException, IllegalAccessException {
+        Object returnObject = method.invoke( bean, update );
+        List<BotApiMethod> resultList = new ArrayList<>();
+        if ( returnObject != null ) {
+            if ( List.class.equals( returnObject.getClass() ) ) {
+                ( ( List ) returnObject ).forEach( obj ->
+                        resultList.add( SendMessage.builder()
+                                .text( String.valueOf( obj ) )
+                                .chatId( String.valueOf( update.getMessage().getChatId() ) )
+                                .build() )
+                );
+            } else {
+                resultList.add( SendMessage.builder()
+                        .text( String.valueOf( returnObject ) )
+                        .chatId( String.valueOf( update.getMessage().getChatId() ) )
+                        .build() );
+            }
+        }
+        return resultList;
     }
 }
