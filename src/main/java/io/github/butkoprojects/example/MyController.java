@@ -3,6 +3,7 @@ package io.github.butkoprojects.example;
 import io.github.butkoprojects.bots.api.BotRequestMethod;
 import io.github.butkoprojects.bots.api.annotation.BotController;
 import io.github.butkoprojects.bots.api.annotation.BotRequestMapping;
+import io.github.butkoprojects.bots.api.annotation.CallbackConfiguration;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -67,7 +68,11 @@ public class MyController {
         moreButton.setText( "text" );
         moreButton.setCallbackData( "more| some data" );
 
-        keyBoardRows.add( Arrays.asList( moreButton ) );
+        InlineKeyboardButton moreButton2 = new InlineKeyboardButton();
+        moreButton2.setText( "text2" );
+        moreButton2.setCallbackData( "more2| some data" );
+
+        keyBoardRows.add( Arrays.asList( moreButton, moreButton2 ) );
         replyMarkup.setKeyboard( keyBoardRows );
 
         return SendMessage.builder()
@@ -89,5 +94,11 @@ public class MyController {
                         .callbackQueryId( update.getCallbackQuery().getId() )
                         .build()
         );
+    }
+
+    @BotRequestMapping( value = "more2", method = BotRequestMethod.CALLBACK )
+    @CallbackConfiguration( showAlert = true, cacheTime = 0 )
+    public String answerCallbackString( final Update update ) {
+        return "That is amazing!";
     }
 }

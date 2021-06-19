@@ -1,6 +1,10 @@
 package io.github.butkoprojects.bots.api.method.controller;
 
+import io.github.butkoprojects.bots.api.BotRequestMethod;
 import io.github.butkoprojects.bots.api.Process;
+import io.github.butkoprojects.bots.api.annotation.BotRequestMapping;
+import io.github.butkoprojects.bots.api.annotation.CallbackConfiguration;
+import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -19,6 +23,11 @@ public class BotApiMethodController {
     private Process processUpdate;
     private Predicate<Update> successUpdate;
 
+    /**
+     * Callback configuration.
+     */
+    private CallbackConfiguration callbackConfiguration;
+
     public BotApiMethodController() {}
 
     public BotApiMethodController(Object bean, Method method, Predicate<Update> predicate ) {
@@ -27,11 +36,22 @@ public class BotApiMethodController {
         this.method = method;
         this.method.setAccessible( true );
 
-        processUpdate = isReturnTypeIsString() ?
-                this::processNonBotApiReturnType :
-                typeListReturnDetect() ?
-                        this::processList :
-                        this::processSingle;
+        BotRequestMethod requestMethod = getRequestMappingMethod();
+        if ( requestMethod == BotRequestMethod.CALLBACK ) {
+            updateCallbackConfiguration();
+            processUpdate = isReturnTypeIsString() ?
+                    this::processCallbackWithStringReturnType :
+                    typeListReturnDetect() ?
+                            this::processList :
+                            this::processSingle;
+        }
+        if ( requestMethod == BotRequestMethod.MSG ) {
+            processUpdate = isReturnTypeIsString() ?
+                    this::processNonBotApiReturnType :
+                    typeListReturnDetect() ?
+                            this::processList :
+                            this::processSingle;
+        }
     }
 
     public List<BotApiMethod> process( Update update ) {
@@ -42,12 +62,37 @@ public class BotApiMethodController {
         }
     }
 
-    boolean isReturnTypeIsString() {
+    private void updateCallbackConfiguration() {
+        callbackConfiguration = method.getAnnotation( CallbackConfiguration.class );
+    }
+
+    private BotRequestMethod getRequestMappingMethod() {
+        BotRequestMapping annotation = method.getAnnotation( BotRequestMapping.class );
+        return annotation.method()[0];
+    }
+
+    private boolean isReturnTypeIsString() {
         return String.class.equals( method.getReturnType() );
     }
 
-    boolean typeListReturnDetect() {
+    private boolean typeListReturnDetect() {
         return List.class.equals( method.getReturnType() );
+    }
+
+    private List<BotApiMethod> processCallbackWithStringReturnType(Update update ) throws InvocationTargetException, IllegalAccessException {
+        Object returnObject = method.invoke( bean, update );
+        List<BotApiMethod> resultList = new ArrayList<>();
+        if ( returnObject != null ) {
+            resultList.add(
+                    AnswerCallbackQuery.builder()
+                            .callbackQueryId( update.getCallbackQuery().getId() )
+                            .text( String.valueOf( returnObject ) )
+                            .showAlert( callbackConfiguration.showAlert() )
+                            .cacheTime( callbackConfiguration.cacheTime() )
+                            .build()
+            );
+        }
+        return resultList;
     }
 
     private List<BotApiMethod> processSingle(Update update ) throws InvocationTargetException, IllegalAccessException {
