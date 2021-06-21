@@ -1,9 +1,7 @@
 package io.github.butkoprojects.bots.api.method.controller;
 
-import io.github.butkoprojects.bots.api.BotRequestMethod;
 import io.github.butkoprojects.bots.api.Process;
-import io.github.butkoprojects.bots.api.annotation.BotRequestMapping;
-import io.github.butkoprojects.bots.api.annotation.CallbackConfiguration;
+import io.github.butkoprojects.bots.api.annotation.CallbackRequest;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -22,7 +20,7 @@ public class BotApiMethodController {
     private Method method;
     private Process processUpdate;
     private Predicate<Update> successUpdate;
-    private CallbackConfiguration callbackConfiguration;
+    private CallbackRequest callbackConfiguration;
 
     public BotApiMethodController() {}
 
@@ -30,7 +28,7 @@ public class BotApiMethodController {
                                   Method method,
                                   Predicate<Update> predicate,
                                   Process process,
-                                  CallbackConfiguration callbackConfiguration) {
+                                  CallbackRequest callbackConfiguration) {
         this.bean = bean;
         this.successUpdate = predicate;
         this.method = method;
@@ -56,7 +54,7 @@ public class BotApiMethodController {
         private Method method;
         private Process processUpdate;
         private Predicate<Update> controllerShouldBeExecuted;
-        private CallbackConfiguration callbackConfiguration;
+        private CallbackRequest callbackConfiguration;
 
         public BotApiMethodControllerBuilder setWorkingBean(Object bean ) {
             this.bean = bean;
@@ -77,33 +75,32 @@ public class BotApiMethodController {
             return this;
         }
 
+        public BotApiMethodControllerBuilder callbackRequest( CallbackRequest callbackRequest ) {
+            callbackConfiguration = callbackRequest;
+            processUpdate = isReturnTypeIsString() ?
+                    this::processCallbackWithStringReturnType :
+                    typeListReturnDetect() ?
+                            this::processList :
+                            this::processSingle;
+            return this;
+        }
+
+        public BotApiMethodControllerBuilder messageRequest() {
+            processUpdate = isReturnTypeIsString() ?
+                    this::processNonBotApiReturnType :
+                    typeListReturnDetect() ?
+                            this::processList :
+                            this::processSingle;
+            return this;
+        }
+
         public BotApiMethodController build() {
-            BotRequestMethod requestMethod = getRequestMappingMethod();
-            if ( requestMethod == BotRequestMethod.CALLBACK ) {
-                updateCallbackConfiguration();
-                processUpdate = isReturnTypeIsString() ?
-                        this::processCallbackWithStringReturnType :
-                        typeListReturnDetect() ?
-                                this::processList :
-                                this::processSingle;
-            }
-            if ( requestMethod == BotRequestMethod.MSG ) {
-                processUpdate = isReturnTypeIsString() ?
-                        this::processNonBotApiReturnType :
-                        typeListReturnDetect() ?
-                                this::processList :
-                                this::processSingle;
-            }
-            return new BotApiMethodController( bean, method, controllerShouldBeExecuted, processUpdate, callbackConfiguration );
-        }
-
-        private void updateCallbackConfiguration() {
-            callbackConfiguration = method.getAnnotation( CallbackConfiguration.class );
-        }
-
-        private BotRequestMethod getRequestMappingMethod() {
-            BotRequestMapping annotation = method.getAnnotation( BotRequestMapping.class );
-            return annotation.method()[0];
+            return new BotApiMethodController(
+                    bean,
+                    method,
+                    controllerShouldBeExecuted,
+                    processUpdate,
+                    callbackConfiguration );
         }
 
         private boolean isReturnTypeIsString() {

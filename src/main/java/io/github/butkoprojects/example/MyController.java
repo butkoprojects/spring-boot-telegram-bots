@@ -1,9 +1,8 @@
 package io.github.butkoprojects.example;
 
-import io.github.butkoprojects.bots.api.BotRequestMethod;
 import io.github.butkoprojects.bots.api.annotation.BotController;
-import io.github.butkoprojects.bots.api.annotation.BotRequestMapping;
-import io.github.butkoprojects.bots.api.annotation.CallbackConfiguration;
+import io.github.butkoprojects.bots.api.annotation.CallbackRequest;
+import io.github.butkoprojects.bots.api.annotation.MessageRequest;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -21,7 +20,7 @@ import java.util.List;
 @BotController
 public class MyController {
 
-    @BotRequestMapping( value = "/start", method = BotRequestMethod.MSG )
+    @MessageRequest( value = "/start" )
     public SendMessage start( final Update update )
     {
         return SendMessage.builder()
@@ -30,13 +29,13 @@ public class MyController {
                 .build();
     }
 
-    @BotRequestMapping( "/home" )
+    @MessageRequest( "/home" )
     public String home( final Update update )
     {
         return "Home";
     }
 
-    @BotRequestMapping( "/buttons" )
+    @MessageRequest( "/buttons" )
     public SendMessage buttons( final Update update )
     {
         KeyboardButton button = new KeyboardButton();
@@ -58,7 +57,7 @@ public class MyController {
                 .build();
     }
 
-    @BotRequestMapping( "/inline" )
+    @MessageRequest( "/inline" )
     public SendMessage inline( final Update update )
     {
         InlineKeyboardMarkup replyMarkup = new InlineKeyboardMarkup();
@@ -82,7 +81,7 @@ public class MyController {
                 .build();
     }
 
-    @BotRequestMapping( value = "more", method = BotRequestMethod.CALLBACK )
+    @CallbackRequest( value = "more", showAlert = false )
     public List<BotApiMethod> answerCallback( final Update update ) {
         return Arrays.asList(
                 SendMessage.builder()
@@ -96,9 +95,23 @@ public class MyController {
         );
     }
 
-    @BotRequestMapping( value = "more2", method = BotRequestMethod.CALLBACK )
-    @CallbackConfiguration( showAlert = true, cacheTime = 0 )
+    @CallbackRequest( value = "more2", showAlert = true )
     public String answerCallbackString( final Update update ) {
         return "That is amazing!";
+    }
+
+    @MessageRequest( value = "chat" )
+    public String chatId( final Update update ) {
+        return String.valueOf( update.getMessage().getChatId() );
+    }
+
+    @MessageRequest( value = "/textTest" )
+    public String textTest( final Update update ) {
+        return "ogo!";
+    }
+
+    @MessageRequest( value = "/gavno" )
+    public String boolshit( final Update update ) {
+        return "gavno";
     }
 }
