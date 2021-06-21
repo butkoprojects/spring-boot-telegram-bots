@@ -1,4 +1,4 @@
-package io.github.butkoprojects.bots.api.realization;
+package io.github.butkoprojects.bots.api.impl;
 
 import io.github.butkoprojects.bots.api.method.controller.BotApiMethodConditionController;
 import io.github.butkoprojects.bots.api.method.controller.FakeBotApiMethodController;

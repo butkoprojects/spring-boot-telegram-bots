@@ -5,8 +5,8 @@ import io.github.butkoprojects.bots.api.annotation.BotControllerCondition;
 import io.github.butkoprojects.bots.api.annotation.BotRequestMapping;
 import io.github.butkoprojects.bots.api.annotation.BotRequestMappingConditional;
 import io.github.butkoprojects.bots.api.method.controller.BotApiMethodConditionController;
-import io.github.butkoprojects.bots.api.realization.BotApiMethodContainerImpl;
-import io.github.butkoprojects.bots.api.realization.DefaultBotRequestMappingCondition;
+import io.github.butkoprojects.bots.api.impl.BotApiMethodContainerImpl;
+import io.github.butkoprojects.bots.api.impl.DefaultBotRequestMappingCondition;
 import io.github.butkoprojects.bots.api.method.controller.BotApiMethodController;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +69,11 @@ public class TelegramUpdateHandlerBeanPostProcessor implements BeanPostProcessor
         String path = ( botController.value().length != 0 ? botController.value()[0] : "" )
                 + ( botRequestMapping.value().length != 0 ? botRequestMapping.value()[0] : "" );
 
-        BotApiMethodController controller = new BotApiMethodController( bean, method, botRequestMapping.method()[0].getPredicate() );
+        BotApiMethodController controller = BotApiMethodController.builder()
+                .setWorkingBean( bean )
+                .setMethod( method )
+                .setPredicate( botRequestMapping.method()[0].getPredicate() )
+                .build();
         container.addBotController( path, controller );
     }
 }

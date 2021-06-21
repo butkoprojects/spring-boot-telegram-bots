@@ -2,8 +2,8 @@ package io.github.butkoprojects.bots;
 
 import io.github.butkoprojects.bots.api.TelegramUpdateHandlerBeanPostProcessor;
 import io.github.butkoprojects.bots.api.method.controller.converter.BotApiMethodControllerConverterImpl;
-import io.github.butkoprojects.bots.api.realization.BotApiMethodContainerHandlerImpl;
-import io.github.butkoprojects.bots.api.realization.BotApiMethodContainerImpl;
+import io.github.butkoprojects.bots.api.impl.BotApiMethodContainerHandlerImpl;
+import io.github.butkoprojects.bots.api.impl.BotApiMethodContainerImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;

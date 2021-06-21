@@ -9,6 +9,10 @@ public class BotApiMethodControllerConverterImpl implements BotApiMethodControll
 
     @Override
     public BotApiMethodController convert( BotApiMethodConditionController conditionController) {
-        return new BotApiMethodController( conditionController.getBean(), conditionController.getMethod(), update -> true );
+        return BotApiMethodController.builder()
+                .setWorkingBean( conditionController.getBean() )
+                .setMethod( conditionController.getMethod() )
+                .setPredicate( update -> true )
+                .build();
     }
 }
