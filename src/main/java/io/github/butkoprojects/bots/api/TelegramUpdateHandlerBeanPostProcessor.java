@@ -80,19 +80,25 @@ public class TelegramUpdateHandlerBeanPostProcessor implements BeanPostProcessor
 
     private void createMessageController( Object bean, Method method, BotController botController ) {
         MessageRequest messageRequest = method.getAnnotation( MessageRequest.class );
+        Keyboard keyboard = method.getAnnotation( Keyboard.class );
+        KeyBoardRow keyBoardRow = method.getAnnotation( KeyBoardRow.class );
+        KeyBoardButton keyBoardButton = method.getAnnotation( KeyBoardButton.class );
 
         String path = ( botController.value().length != 0 ? botController.value()[0] : "" )
                 + messageRequest.value();
 
         Predicate<Update> updatePredicate = update -> update != null && update.hasMessage() && update.getMessage().hasText();
 
-        BotApiMethodController controller = BotApiMethodController.builder()
+        BotApiMethodController.BotApiMethodControllerBuilder builder = BotApiMethodController.builder()
                 .setWorkingBean( bean )
                 .setMethod( method )
                 .setPredicate( updatePredicate )
                 .messageRequest()
-                .build();
-        container.addBotController( path, controller );
+                .setKeyBoard( keyboard )
+                .setKeyBoardRow( keyBoardRow )
+                .setKeyBoardButton( keyBoardButton );
+
+        container.addBotController( path, builder.build() );
     }
 
     private void createCallbackController( Object bean, Method method, BotController botController ) {

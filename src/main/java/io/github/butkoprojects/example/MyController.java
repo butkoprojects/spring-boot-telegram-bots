@@ -1,8 +1,6 @@
 package io.github.butkoprojects.example;
 
-import io.github.butkoprojects.bots.api.annotation.BotController;
-import io.github.butkoprojects.bots.api.annotation.CallbackRequest;
-import io.github.butkoprojects.bots.api.annotation.MessageRequest;
+import io.github.butkoprojects.bots.api.annotation.*;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -21,6 +19,9 @@ import java.util.List;
 public class MyController {
 
     @MessageRequest( value = "/start" )
+    @KeyBoardRow({ @KeyBoardButton("button1"), @KeyBoardButton("button1") })
+    @KeyBoardRow({ @KeyBoardButton("button2"), @KeyBoardButton("button2") })
+    @KeyBoardRow({ @KeyBoardButton("button3") })
     public SendMessage start( final Update update )
     {
         return SendMessage.builder()
@@ -30,14 +31,14 @@ public class MyController {
     }
 
     @MessageRequest( "/home" )
+    @KeyBoardButton( value = "eto home bitch", requestContact = true )
     public String home( final Update update )
     {
         return "Home";
     }
 
     @MessageRequest( "/buttons" )
-    public SendMessage buttons( final Update update )
-    {
+    public SendMessage buttons( final Update update ) {
         KeyboardButton button = new KeyboardButton();
         button.setText("button1");
 
@@ -100,18 +101,10 @@ public class MyController {
         return "That is amazing!";
     }
 
-    @MessageRequest( value = "chat" )
-    public String chatId( final Update update ) {
-        return String.valueOf( update.getMessage().getChatId() );
-    }
-
-    @MessageRequest( value = "/textTest" )
-    public String textTest( final Update update ) {
-        return "ogo!";
-    }
-
-    @MessageRequest( value = "/gavno" )
-    public String boolshit( final Update update ) {
-        return "gavno";
+    @MessageRequest( value = "/keyboard" )
+    @KeyBoardButton("single")
+    @KeyBoardButton("not single")
+    public String keyboard( final Update update ) {
+        return "keyboard test";
     }
 }

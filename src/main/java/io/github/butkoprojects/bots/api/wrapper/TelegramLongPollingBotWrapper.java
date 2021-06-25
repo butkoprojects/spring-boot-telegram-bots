@@ -2,6 +2,7 @@ package io.github.butkoprojects.bots.api.wrapper;
 
 import io.github.butkoprojects.bots.api.BotApiMethodContainerHandler;
 import io.github.butkoprojects.bots.api.method.controller.BotApiMethodController;
+import io.github.butkoprojects.bots.api.BotSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;

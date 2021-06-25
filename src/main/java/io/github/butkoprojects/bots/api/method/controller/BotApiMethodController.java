@@ -2,10 +2,16 @@ package io.github.butkoprojects.bots.api.method.controller;
 
 import io.github.butkoprojects.bots.api.Process;
 import io.github.butkoprojects.bots.api.annotation.CallbackRequest;
+import io.github.butkoprojects.bots.api.annotation.KeyBoardButton;
+import io.github.butkoprojects.bots.api.annotation.KeyBoardRow;
+import io.github.butkoprojects.bots.api.annotation.Keyboard;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.*;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -55,8 +61,66 @@ public class BotApiMethodController {
         private Process processUpdate;
         private Predicate<Update> controllerShouldBeExecuted;
         private CallbackRequest callbackConfiguration;
+        private ReplyKeyboardMarkup keyboardMarkup;
+        private boolean needSession;
 
-        public BotApiMethodControllerBuilder setWorkingBean(Object bean ) {
+        public BotApiMethodControllerBuilder setKeyBoardButton( KeyBoardButton keyBoardButton ) {
+            if ( keyBoardButton != null ) {
+                keyboardMarkup = new ReplyKeyboardMarkup();
+                final List<KeyboardRow> keyboardRows = new ArrayList<>();
+                KeyboardRow keyboardRow = new KeyboardRow();
+
+                KeyboardButton button = new KeyboardButton();
+                button.setText( keyBoardButton.value() );
+                button.setRequestContact( keyBoardButton.requestContact() );
+                button.setRequestLocation( keyBoardButton.requestLocation() );
+                keyboardRow.add( button );
+
+                keyboardRows.add( keyboardRow );
+                keyboardMarkup.setKeyboard( keyboardRows );
+            }
+            return this;
+        }
+
+        public BotApiMethodControllerBuilder setKeyBoardRow( KeyBoardRow rowAnnotation ) {
+            if ( rowAnnotation != null ) {
+                keyboardMarkup = new ReplyKeyboardMarkup();
+                final List<KeyboardRow> keyboardRows = new ArrayList<>();
+                    KeyboardRow keyboardRow = new KeyboardRow();
+                    for ( KeyBoardButton keyBoardButton :rowAnnotation.value() ) {
+                        KeyboardButton button = new KeyboardButton();
+                        button.setText( keyBoardButton.value() );
+                        button.setRequestContact( keyBoardButton.requestContact() );
+                        button.setRequestLocation( keyBoardButton.requestLocation() );
+                        keyboardRow.add( button );
+                    }
+                    keyboardRows.add( keyboardRow );
+                keyboardMarkup.setKeyboard( keyboardRows );
+            }
+            return this;
+        }
+
+        public BotApiMethodControllerBuilder setKeyBoard( Keyboard keyBoard ) {
+            if ( keyBoard != null ) {
+                keyboardMarkup = new ReplyKeyboardMarkup();
+                final List<KeyboardRow> keyboardRows = new ArrayList<>();
+                for ( KeyBoardRow keyboardRow : keyBoard.value() ) {
+                    KeyboardRow row = new KeyboardRow();
+                    for ( KeyBoardButton keyBoardButton : keyboardRow.value() ) {
+                        KeyboardButton button = new KeyboardButton();
+                        button.setText( keyBoardButton.value() );
+                        button.setRequestContact( keyBoardButton.requestContact() );
+                        button.setRequestLocation( keyBoardButton.requestLocation() );
+                        row.add( button );
+                    }
+                    keyboardRows.add( row );
+                }
+                keyboardMarkup.setKeyboard( keyboardRows );
+            }
+            return this;
+        }
+
+        public BotApiMethodControllerBuilder setWorkingBean( Object bean ) {
             this.bean = bean;
             return this;
         }
@@ -128,7 +192,7 @@ public class BotApiMethodController {
         }
 
         private List<BotApiMethod> processSingle(Update update ) throws InvocationTargetException, IllegalAccessException {
-            BotApiMethod botApiMethod = (BotApiMethod) method.invoke( bean, update );
+            BotApiMethod botApiMethod = postProcessMethodInvocation( method.invoke( bean, update ) );
             return botApiMethod != null ? Collections.singletonList( botApiMethod ) : new ArrayList<>( 0 );
         }
 
@@ -145,17 +209,36 @@ public class BotApiMethodController {
                     ( ( List ) returnObject ).forEach( obj ->
                             resultList.add( SendMessage.builder()
                                     .text( String.valueOf( obj ) )
+                                    .replyMarkup( keyboardMarkup )
                                     .chatId( String.valueOf( update.getMessage().getChatId() ) )
                                     .build() )
                     );
                 } else {
                     resultList.add( SendMessage.builder()
                             .text( String.valueOf( returnObject ) )
+                            .replyMarkup( keyboardMarkup )
                             .chatId( String.valueOf( update.getMessage().getChatId() ) )
                             .build() );
                 }
             }
             return resultList;
+        }
+
+        private BotApiMethod postProcessMethodInvocation( Object result ) throws InvocationTargetException, IllegalAccessException {
+            if ( result instanceof SendMessage ) { ( ( SendMessage ) result ).setReplyMarkup( keyboardMarkup ); }
+            if ( result instanceof SendAnimation) { ( ( SendAnimation ) result ).setReplyMarkup( keyboardMarkup ); }
+            if ( result instanceof SendContact ) { ( ( SendContact ) result ).setReplyMarkup( keyboardMarkup ); }
+            if ( result instanceof SendDice ) { ( ( SendDice ) result ).setReplyMarkup( keyboardMarkup ); }
+            if ( result instanceof SendDocument ) { ( ( SendDocument ) result ).setReplyMarkup( keyboardMarkup ); }
+            if ( result instanceof SendGame ) { ( ( SendGame ) result ).setReplyMarkup( keyboardMarkup ); }
+            if ( result instanceof SendLocation ) { ( ( SendLocation ) result ).setReplyMarkup( keyboardMarkup ); }
+            if ( result instanceof SendPhoto ) { ( ( SendPhoto ) result ).setReplyMarkup( keyboardMarkup ); }
+            if ( result instanceof SendSticker ) { ( ( SendSticker ) result ).setReplyMarkup( keyboardMarkup ); }
+            if ( result instanceof SendVenue ) { ( ( SendVenue ) result ).setReplyMarkup( keyboardMarkup ); }
+            if ( result instanceof SendVideo ) { ( ( SendVideo ) result ).setReplyMarkup( keyboardMarkup ); }
+            if ( result instanceof SendVideoNote ) { ( ( SendVideoNote ) result ).setReplyMarkup( keyboardMarkup ); }
+            if ( result instanceof SendVoice ) { ( ( SendVoice ) result ).setReplyMarkup( keyboardMarkup ); }
+            return ( BotApiMethod ) result;
         }
     }
 }
