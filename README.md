@@ -127,7 +127,7 @@ public String start( final Update update ) {
 
 As a result you will get such button:
 
-<img src="button1.png" alt="button" width="10%"/>
+<img src="button1.png" alt="button" width="40%"/>
 
 You can experiment with variations like here:
 
