@@ -21,8 +21,7 @@ public class MyController {
     @MessageRequest( value = "/start" )
     @KeyBoardRow({ @KeyBoardButton("button1"), @KeyBoardButton("button1") })
     @KeyBoardRow({ @KeyBoardButton("button2"), @KeyBoardButton("button2") })
-    @KeyBoardRow({ @KeyBoardButton("button3") })
-    public SendMessage start( final Update update )
+    public SendMessage start2( final Update update )
     {
         return SendMessage.builder()
                 .chatId(String.valueOf(update.getMessage().getChatId()))
@@ -58,9 +57,8 @@ public class MyController {
                 .build();
     }
 
-    @MessageRequest( "/inline" )
-    public SendMessage inline( final Update update )
-    {
+    @MessageRequest( "/start2" )
+    public SendMessage start( final Update update ) {
         InlineKeyboardMarkup replyMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyBoardRows = new ArrayList<>();
 
@@ -68,17 +66,13 @@ public class MyController {
         moreButton.setText( "text" );
         moreButton.setCallbackData( "more| some data" );
 
-        InlineKeyboardButton moreButton2 = new InlineKeyboardButton();
-        moreButton2.setText( "text2" );
-        moreButton2.setCallbackData( "more2| some data" );
-
-        keyBoardRows.add( Arrays.asList( moreButton, moreButton2 ) );
+        keyBoardRows.add( Arrays.asList( moreButton ) );
         replyMarkup.setKeyboard( keyBoardRows );
 
         return SendMessage.builder()
                 .replyMarkup( replyMarkup )
                 .chatId(String.valueOf(update.getMessage().getChatId()))
-                .text("Inline.")
+                .text("Start message.")
                 .build();
     }
 

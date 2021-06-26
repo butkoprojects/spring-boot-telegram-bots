@@ -67,6 +67,7 @@ public class BotApiMethodController {
         public BotApiMethodControllerBuilder setKeyBoardButton( KeyBoardButton keyBoardButton ) {
             if ( keyBoardButton != null ) {
                 keyboardMarkup = new ReplyKeyboardMarkup();
+                keyboardMarkup.setResizeKeyboard( true );
                 final List<KeyboardRow> keyboardRows = new ArrayList<>();
                 KeyboardRow keyboardRow = new KeyboardRow();
 
@@ -159,6 +160,9 @@ public class BotApiMethodController {
         }
 
         public BotApiMethodController build() {
+            if ( keyboardMarkup != null ) {
+                keyboardMarkup.setResizeKeyboard(true);
+            }
             return new BotApiMethodController(
                     bean,
                     method,
@@ -225,19 +229,47 @@ public class BotApiMethodController {
         }
 
         private BotApiMethod postProcessMethodInvocation( Object result ) throws InvocationTargetException, IllegalAccessException {
-            if ( result instanceof SendMessage ) { ( ( SendMessage ) result ).setReplyMarkup( keyboardMarkup ); }
-            if ( result instanceof SendAnimation) { ( ( SendAnimation ) result ).setReplyMarkup( keyboardMarkup ); }
-            if ( result instanceof SendContact ) { ( ( SendContact ) result ).setReplyMarkup( keyboardMarkup ); }
-            if ( result instanceof SendDice ) { ( ( SendDice ) result ).setReplyMarkup( keyboardMarkup ); }
-            if ( result instanceof SendDocument ) { ( ( SendDocument ) result ).setReplyMarkup( keyboardMarkup ); }
-            if ( result instanceof SendGame ) { ( ( SendGame ) result ).setReplyMarkup( keyboardMarkup ); }
-            if ( result instanceof SendLocation ) { ( ( SendLocation ) result ).setReplyMarkup( keyboardMarkup ); }
-            if ( result instanceof SendPhoto ) { ( ( SendPhoto ) result ).setReplyMarkup( keyboardMarkup ); }
-            if ( result instanceof SendSticker ) { ( ( SendSticker ) result ).setReplyMarkup( keyboardMarkup ); }
-            if ( result instanceof SendVenue ) { ( ( SendVenue ) result ).setReplyMarkup( keyboardMarkup ); }
-            if ( result instanceof SendVideo ) { ( ( SendVideo ) result ).setReplyMarkup( keyboardMarkup ); }
-            if ( result instanceof SendVideoNote ) { ( ( SendVideoNote ) result ).setReplyMarkup( keyboardMarkup ); }
-            if ( result instanceof SendVoice ) { ( ( SendVoice ) result ).setReplyMarkup( keyboardMarkup ); }
+            if ( keyboardMarkup != null ) {
+                if (result instanceof SendMessage) {
+                    ((SendMessage) result).setReplyMarkup(keyboardMarkup);
+                }
+                if (result instanceof SendAnimation) {
+                    ((SendAnimation) result).setReplyMarkup(keyboardMarkup);
+                }
+                if (result instanceof SendContact) {
+                    ((SendContact) result).setReplyMarkup(keyboardMarkup);
+                }
+                if (result instanceof SendDice) {
+                    ((SendDice) result).setReplyMarkup(keyboardMarkup);
+                }
+                if (result instanceof SendDocument) {
+                    ((SendDocument) result).setReplyMarkup(keyboardMarkup);
+                }
+                if (result instanceof SendGame) {
+                    ((SendGame) result).setReplyMarkup(keyboardMarkup);
+                }
+                if (result instanceof SendLocation) {
+                    ((SendLocation) result).setReplyMarkup(keyboardMarkup);
+                }
+                if (result instanceof SendPhoto) {
+                    ((SendPhoto) result).setReplyMarkup(keyboardMarkup);
+                }
+                if (result instanceof SendSticker) {
+                    ((SendSticker) result).setReplyMarkup(keyboardMarkup);
+                }
+                if (result instanceof SendVenue) {
+                    ((SendVenue) result).setReplyMarkup(keyboardMarkup);
+                }
+                if (result instanceof SendVideo) {
+                    ((SendVideo) result).setReplyMarkup(keyboardMarkup);
+                }
+                if (result instanceof SendVideoNote) {
+                    ((SendVideoNote) result).setReplyMarkup(keyboardMarkup);
+                }
+                if (result instanceof SendVoice) {
+                    ((SendVoice) result).setReplyMarkup(keyboardMarkup);
+                }
+            }
             return ( BotApiMethod ) result;
         }
     }
