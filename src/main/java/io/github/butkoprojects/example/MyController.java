@@ -18,6 +18,19 @@ import java.util.List;
 @BotController
 public class MyController {
 
+    @MessageRequest( "/hola" )
+    @CallbackButtonRow({
+            @CallbackButton( text = "hola", call = "more", data = "something"),
+            @CallbackButton( text = "aloh", call = "more", data = "something")
+    })
+    @CallbackButtonRow({
+            @CallbackButton( text = "loks", call = "more", data = "something"),
+            @CallbackButton( text = "skool", call = "more", data = "something")
+    })
+    public String callback( final Update update ) {
+        return "hi hi hi hi hi hi";
+    }
+
     @MessageRequest( value = "/start" )
     @KeyBoardRow({ @KeyBoardButton("button1"), @KeyBoardButton("button1") })
     @KeyBoardRow({ @KeyBoardButton("button2"), @KeyBoardButton("button2") })

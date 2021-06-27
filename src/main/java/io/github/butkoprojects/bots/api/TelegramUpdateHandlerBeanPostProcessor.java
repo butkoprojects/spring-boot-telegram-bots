@@ -84,6 +84,10 @@ public class TelegramUpdateHandlerBeanPostProcessor implements BeanPostProcessor
         KeyBoardRow keyBoardRow = method.getAnnotation( KeyBoardRow.class );
         KeyBoardButton keyBoardButton = method.getAnnotation( KeyBoardButton.class );
 
+        CallbackKeyboard callbackKeyboard = method.getAnnotation( CallbackKeyboard.class );
+        CallbackButtonRow callbackButtonRow = method.getAnnotation( CallbackButtonRow.class );
+        CallbackButton callbackButton = method.getAnnotation( CallbackButton.class );
+
         String path = ( botController.value().length != 0 ? botController.value()[0] : "" )
                 + messageRequest.value();
 
@@ -96,7 +100,10 @@ public class TelegramUpdateHandlerBeanPostProcessor implements BeanPostProcessor
                 .messageRequest()
                 .setKeyBoard( keyboard )
                 .setKeyBoardRow( keyBoardRow )
-                .setKeyBoardButton( keyBoardButton );
+                .setKeyBoardButton( keyBoardButton )
+                .setCallbackKeyboard( callbackKeyboard )
+                .setCallbackButtonRow( callbackButtonRow )
+                .setCallbackButton( callbackButton );
 
         container.addBotController( path, builder.build() );
     }

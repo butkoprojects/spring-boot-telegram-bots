@@ -7,7 +7,7 @@ Build on spring boot starter.
     <dependency>
         <groupId>io.github.butkoprojects</groupId>
         <artifactId>spring-boot-telegram-bots</artifactId>
-        <version>1.0.29</version>
+        <version>1.1.0</version>
     </dependency>
 ```
 

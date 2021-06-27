@@ -1,21 +1,22 @@
 package io.github.butkoprojects.bots.api.method.controller;
 
 import io.github.butkoprojects.bots.api.Process;
-import io.github.butkoprojects.bots.api.annotation.CallbackRequest;
-import io.github.butkoprojects.bots.api.annotation.KeyBoardButton;
-import io.github.butkoprojects.bots.api.annotation.KeyBoardRow;
-import io.github.butkoprojects.bots.api.annotation.Keyboard;
+import io.github.butkoprojects.bots.api.annotation.*;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.*;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
@@ -62,7 +63,64 @@ public class BotApiMethodController {
         private Predicate<Update> controllerShouldBeExecuted;
         private CallbackRequest callbackConfiguration;
         private ReplyKeyboardMarkup keyboardMarkup;
+        private InlineKeyboardMarkup inlineKeyboardMarkup;
         private boolean needSession;
+
+        public BotApiMethodControllerBuilder setCallbackKeyboard( CallbackKeyboard callbackKeyboard ) {
+            if ( callbackKeyboard != null ) {
+                inlineKeyboardMarkup = new InlineKeyboardMarkup();
+                List<List<InlineKeyboardButton>> keyBoardRows = new ArrayList<>();
+
+                for ( CallbackButtonRow row: callbackKeyboard.value() ) {
+                    List<InlineKeyboardButton> keyboardRow = new ArrayList<>();
+                    for ( CallbackButton button: row.value() ) {
+                        InlineKeyboardButton inlineButton = new InlineKeyboardButton();
+                        inlineButton.setText( button.text() );
+                        inlineButton.setCallbackData( button.call() + "|" + button.data() );
+                        keyboardRow.add( inlineButton );
+                    }
+                    keyBoardRows.add( keyboardRow );
+                }
+                inlineKeyboardMarkup.setKeyboard( keyBoardRows );
+            }
+            return this;
+        }
+
+        public BotApiMethodControllerBuilder setCallbackButtonRow( CallbackButtonRow callbackButtonRow ) {
+            if ( callbackButtonRow != null ) {
+                inlineKeyboardMarkup = new InlineKeyboardMarkup();
+                List<List<InlineKeyboardButton>> keyBoardRows = new ArrayList<>();
+
+                List<InlineKeyboardButton> keyboardRow = new ArrayList<>();
+                for ( CallbackButton button: callbackButtonRow.value() ) {
+                    InlineKeyboardButton inlineButton = new InlineKeyboardButton();
+                    inlineButton.setText( button.text() );
+                    inlineButton.setCallbackData( button.call() + "|" + button.data() );
+                    keyboardRow.add( inlineButton );
+                }
+
+                keyBoardRows.add( keyboardRow );
+                inlineKeyboardMarkup.setKeyboard( keyBoardRows );
+            }
+            return this;
+        }
+
+        public BotApiMethodControllerBuilder setCallbackButton( CallbackButton callbackButton ) {
+            if ( callbackButton != null ) {
+                inlineKeyboardMarkup = new InlineKeyboardMarkup();
+                List<List<InlineKeyboardButton>> keyBoardRows = new ArrayList<>();
+                List<InlineKeyboardButton> keyboardRow = new ArrayList<>();
+
+                InlineKeyboardButton inlineButton = new InlineKeyboardButton();
+                inlineButton.setText( callbackButton.text() );
+                inlineButton.setCallbackData( callbackButton.call() + "|" + callbackButton.data() );
+                keyboardRow.add( inlineButton );
+
+                keyBoardRows.add( keyboardRow );
+                inlineKeyboardMarkup.setKeyboard( keyBoardRows );
+            }
+            return this;
+        }
 
         public BotApiMethodControllerBuilder setKeyBoardButton( KeyBoardButton keyBoardButton ) {
             if ( keyBoardButton != null ) {
@@ -206,6 +264,11 @@ public class BotApiMethodController {
         }
 
         private List<BotApiMethod> processNonBotApiReturnType( Update update ) throws InvocationTargetException, IllegalAccessException {
+            ReplyKeyboard keyboard = keyboardMarkup != null
+                    ? keyboardMarkup
+                    : inlineKeyboardMarkup != null
+                        ? inlineKeyboardMarkup
+                        : null;
             Object returnObject = method.invoke( bean, update );
             List<BotApiMethod> resultList = new ArrayList<>();
             if ( returnObject != null ) {
@@ -213,14 +276,14 @@ public class BotApiMethodController {
                     ( ( List ) returnObject ).forEach( obj ->
                             resultList.add( SendMessage.builder()
                                     .text( String.valueOf( obj ) )
-                                    .replyMarkup( keyboardMarkup )
+                                    .replyMarkup( keyboard )
                                     .chatId( String.valueOf( update.getMessage().getChatId() ) )
                                     .build() )
                     );
                 } else {
                     resultList.add( SendMessage.builder()
                             .text( String.valueOf( returnObject ) )
-                            .replyMarkup( keyboardMarkup )
+                            .replyMarkup( keyboard )
                             .chatId( String.valueOf( update.getMessage().getChatId() ) )
                             .build() );
                 }
@@ -229,45 +292,52 @@ public class BotApiMethodController {
         }
 
         private BotApiMethod postProcessMethodInvocation( Object result ) throws InvocationTargetException, IllegalAccessException {
+            ReplyKeyboard keyboard = null;
             if ( keyboardMarkup != null ) {
+                keyboard = keyboardMarkup;
+            }
+            if ( inlineKeyboardMarkup != null ) {
+                keyboard = inlineKeyboardMarkup;
+            }
+            if ( keyboard != null ) {
                 if (result instanceof SendMessage) {
-                    ((SendMessage) result).setReplyMarkup(keyboardMarkup);
+                    ((SendMessage) result).setReplyMarkup(keyboard);
                 }
                 if (result instanceof SendAnimation) {
-                    ((SendAnimation) result).setReplyMarkup(keyboardMarkup);
+                    ((SendAnimation) result).setReplyMarkup(keyboard);
                 }
                 if (result instanceof SendContact) {
-                    ((SendContact) result).setReplyMarkup(keyboardMarkup);
+                    ((SendContact) result).setReplyMarkup(keyboard);
                 }
                 if (result instanceof SendDice) {
-                    ((SendDice) result).setReplyMarkup(keyboardMarkup);
+                    ((SendDice) result).setReplyMarkup(keyboard);
                 }
                 if (result instanceof SendDocument) {
-                    ((SendDocument) result).setReplyMarkup(keyboardMarkup);
+                    ((SendDocument) result).setReplyMarkup(keyboard);
                 }
                 if (result instanceof SendGame) {
-                    ((SendGame) result).setReplyMarkup(keyboardMarkup);
+                    ((SendGame) result).setReplyMarkup(keyboard);
                 }
                 if (result instanceof SendLocation) {
-                    ((SendLocation) result).setReplyMarkup(keyboardMarkup);
+                    ((SendLocation) result).setReplyMarkup(keyboard);
                 }
                 if (result instanceof SendPhoto) {
-                    ((SendPhoto) result).setReplyMarkup(keyboardMarkup);
+                    ((SendPhoto) result).setReplyMarkup(keyboard);
                 }
                 if (result instanceof SendSticker) {
-                    ((SendSticker) result).setReplyMarkup(keyboardMarkup);
+                    ((SendSticker) result).setReplyMarkup(keyboard);
                 }
                 if (result instanceof SendVenue) {
-                    ((SendVenue) result).setReplyMarkup(keyboardMarkup);
+                    ((SendVenue) result).setReplyMarkup(keyboard);
                 }
                 if (result instanceof SendVideo) {
-                    ((SendVideo) result).setReplyMarkup(keyboardMarkup);
+                    ((SendVideo) result).setReplyMarkup(keyboard);
                 }
                 if (result instanceof SendVideoNote) {
-                    ((SendVideoNote) result).setReplyMarkup(keyboardMarkup);
+                    ((SendVideoNote) result).setReplyMarkup(keyboard);
                 }
                 if (result instanceof SendVoice) {
-                    ((SendVoice) result).setReplyMarkup(keyboardMarkup);
+                    ((SendVoice) result).setReplyMarkup(keyboard);
                 }
             }
             return ( BotApiMethod ) result;
