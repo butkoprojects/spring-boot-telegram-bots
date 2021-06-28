@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.function.Predicate;
@@ -26,17 +25,34 @@ public class DefaultControllerFactory implements ControllerFactory {
     @Autowired
     private List<AnnotationProcessor> processors;
 
+    public void generateController2( Object bean, Method method ) {
+        ControllerBuilder newBuilder = builder.instance();
+        newBuilder.setMethod( method ).setBean( bean );
+
+        processors.forEach( annotationProcessor -> {
+            if ( method.isAnnotationPresent( annotationProcessor.getAnnotationClass() ) ) {
+                annotationProcessor.process(
+                        method.getAnnotation( annotationProcessor.getAnnotationClass() ),
+                        newBuilder
+                );
+            }
+        });
+
+        container.addBotController( newBuilder.getPath(), newBuilder.build() );
+    }
+
     @Override
     public void generateController( Object bean, Method method ) {
-        ControllerBuilder newBuilder = builder.instance();
-        BotController botController = bean.getClass().getAnnotation( BotController.class );
-
-        if ( method.isAnnotationPresent( MessageRequest.class ) ) {
-            createMessageController( bean, method, botController );
-        }
-        if ( method.isAnnotationPresent( CallbackRequest.class ) ) {
-            createCallbackController( bean, method, botController );
-        }
+        generateController2( bean, method );
+//        ControllerBuilder newBuilder = builder.instance();
+//        BotController botController = bean.getClass().getAnnotation( BotController.class );
+//
+//        if ( method.isAnnotationPresent( MessageRequest.class ) ) {
+//            createMessageController( bean, method, botController );
+//        }
+//        if ( method.isAnnotationPresent( CallbackRequest.class ) ) {
+//            createCallbackController( bean, method, botController );
+//        }
     }
 
     private void createMessageController( Object bean, Method method, BotController botController ) {

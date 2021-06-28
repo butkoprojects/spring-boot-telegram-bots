@@ -4,6 +4,7 @@ import io.github.butkoprojects.bots.preprocess.controller.builder.ControllerBuil
 import io.github.butkoprojects.bots.util.annotation.CallbackButton;
 import io.github.butkoprojects.bots.util.annotation.CallbackButtonRow;
 import io.github.butkoprojects.bots.util.annotation.CallbackKeyboard;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -12,10 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@Order( 1 )
 public class CallbackKeyboard_AnnotationProcessor implements AnnotationProcessor<CallbackKeyboard> {
 
     @Override
-    public Class getAnnotationClass() {
+    public Class<CallbackKeyboard> getAnnotationClass() {
         return CallbackKeyboard.class;
     }
 

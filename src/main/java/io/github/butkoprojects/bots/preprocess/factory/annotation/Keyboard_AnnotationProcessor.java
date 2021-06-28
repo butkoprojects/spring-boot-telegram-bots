@@ -4,6 +4,7 @@ import io.github.butkoprojects.bots.preprocess.controller.builder.ControllerBuil
 import io.github.butkoprojects.bots.util.annotation.KeyBoardButton;
 import io.github.butkoprojects.bots.util.annotation.KeyBoardRow;
 import io.github.butkoprojects.bots.util.annotation.Keyboard;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
@@ -13,10 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@Order( 4 )
 public class Keyboard_AnnotationProcessor implements AnnotationProcessor<Keyboard> {
 
     @Override
-    public Class getAnnotationClass() {
+    public Class<Keyboard> getAnnotationClass() {
         return Keyboard.class;
     }
 

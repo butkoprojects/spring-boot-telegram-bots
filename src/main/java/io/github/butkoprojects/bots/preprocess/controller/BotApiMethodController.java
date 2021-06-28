@@ -187,7 +187,7 @@ public class BotApiMethodController {
             callbackConfiguration = callbackRequest;
             processUpdate = isReturnTypeIsString() ?
                     this::processCallbackWithStringReturnType :
-                    typeListReturnDetect() ?
+                    returnTypeIsList() ?
                             this::processList :
                             this::processSingle;
             return this;
@@ -196,7 +196,7 @@ public class BotApiMethodController {
         public BotApiMethodControllerBuilder messageRequest() {
             processUpdate = isReturnTypeIsString() ?
                     this::processNonBotApiReturnType :
-                    typeListReturnDetect() ?
+                    returnTypeIsList() ?
                             this::processList :
                             this::processSingle;
             return this;
@@ -215,7 +215,7 @@ public class BotApiMethodController {
             return String.class.equals( method.getReturnType() );
         }
 
-        private boolean typeListReturnDetect() {
+        private boolean returnTypeIsList() {
             return List.class.equals( method.getReturnType() );
         }
 
@@ -250,7 +250,7 @@ public class BotApiMethodController {
             return botApiMethod != null ? Collections.singletonList( botApiMethod ) : new ArrayList<>( 0 );
         }
 
-        private List<BotApiMethod> processList(Update update ) {
+        private List<BotApiMethod> processList( Update update ) {
             List<BotApiMethod> botApiMethods = null;
             try {
                 botApiMethods = (List<BotApiMethod>) method.invoke( bean, update );

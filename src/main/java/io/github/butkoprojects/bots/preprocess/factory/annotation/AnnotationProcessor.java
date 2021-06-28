@@ -4,7 +4,7 @@ import io.github.butkoprojects.bots.preprocess.controller.builder.ControllerBuil
 
 public interface AnnotationProcessor<T> {
 
-    Class getAnnotationClass();
+    Class<T> getAnnotationClass();
 
     void process( T annotation, ControllerBuilder builder );
 
