@@ -1,0 +1,38 @@
+package io.github.butkoprojects.bots.preprocess.factory.annotation;
+
+import io.github.butkoprojects.bots.preprocess.controller.builder.ControllerBuilder;
+import io.github.butkoprojects.bots.util.annotation.CallbackButton;
+import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Component
+public class CallbackButtonAnnotationProcessor implements AnnotationProcessor<CallbackButton> {
+
+    @Override
+    public Class getAnnotationClass() {
+        return CallbackButton.class;
+    }
+
+    @Override
+    public void process( CallbackButton callbackButton,
+                         ControllerBuilder builder ) {
+        if ( callbackButton != null ) {
+            InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+            List<List<InlineKeyboardButton>> keyBoardRows = new ArrayList<>();
+            List<InlineKeyboardButton> keyboardRow = new ArrayList<>();
+
+            InlineKeyboardButton inlineButton = new InlineKeyboardButton();
+            inlineButton.setText( callbackButton.text() );
+            inlineButton.setCallbackData( callbackButton.call() + "|" + callbackButton.data() );
+            keyboardRow.add( inlineButton );
+
+            keyBoardRows.add( keyboardRow );
+            inlineKeyboardMarkup.setKeyboard( keyBoardRows );
+            builder.setInlineKeyboardMarkup( inlineKeyboardMarkup );
+        }
+    }
+}

@@ -1,10 +1,10 @@
 package io.github.butkoprojects.example;
 
-import io.github.butkoprojects.bots.api.wrapper.TelegramLongPollingBotWrapper;
+import io.github.butkoprojects.bots.util.TelegramBot;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MyBot extends TelegramLongPollingBotWrapper {
+public class MyBot extends TelegramBot {
 
     @Override
     public String getBotUsername() {

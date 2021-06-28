@@ -1,9 +1,11 @@
 package io.github.butkoprojects.bots;
 
-import io.github.butkoprojects.bots.api.TelegramUpdateHandlerBeanPostProcessor;
-import io.github.butkoprojects.bots.api.method.controller.converter.BotApiMethodControllerConverterImpl;
-import io.github.butkoprojects.bots.api.impl.BotApiMethodContainerHandlerImpl;
-import io.github.butkoprojects.bots.api.impl.BotApiMethodContainerImpl;
+import io.github.butkoprojects.bots.preprocess.TelegramUpdateHandlerBeanPostProcessor;
+import io.github.butkoprojects.bots.handler.DefaultBotRequestHandler;
+import io.github.butkoprojects.bots.preprocess.container.DefaultBotMethodContainer;
+import io.github.butkoprojects.bots.preprocess.controller.builder.DefaultControllerBuilder;
+import io.github.butkoprojects.bots.preprocess.factory.DefaultControllerFactory;
+import io.github.butkoprojects.bots.preprocess.factory.annotation.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -34,9 +36,18 @@ import java.util.List;
         TelegramProperties.class,
         TelegramApiFactory.class,
         SetWebhookBuilderFactory.class,
-        BotApiMethodContainerImpl.class,
-        BotApiMethodContainerHandlerImpl.class,
-        BotApiMethodControllerConverterImpl.class,
+        DefaultBotMethodContainer.class,
+        DefaultBotRequestHandler.class,
+        DefaultControllerFactory.class,
+        DefaultControllerBuilder.class,
+        MessageRequestAnnotationProcessor.class,
+        CallbackKeyboardAnnotationProcessor.class,
+        CallbackButtonRowAnnotationProcessor.class,
+        CallbackButtonAnnotationProcessor.class,
+        KeyboardAnnotationProcessor.class,
+        KeyBoardRowAnnotationProcessor.class,
+        KeyBoardButtonAnnotationProcessor.class,
+        CallbackRequestAnnotationProcessor.class,
         TelegramUpdateHandlerBeanPostProcessor.class
 })
 public class TelegramBotAutoConfiguration {

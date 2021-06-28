@@ -1,6 +1,6 @@
 package io.github.butkoprojects.example;
 
-import io.github.butkoprojects.bots.api.annotation.*;
+import io.github.butkoprojects.bots.util.annotation.*;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
