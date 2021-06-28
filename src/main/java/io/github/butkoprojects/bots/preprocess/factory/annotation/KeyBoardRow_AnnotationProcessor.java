@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class KeyBoardRowAnnotationProcessor implements AnnotationProcessor<KeyBoardRow> {
+public class KeyBoardRow_AnnotationProcessor implements AnnotationProcessor<KeyBoardRow> {
 
     @Override
     public Class getAnnotationClass() {

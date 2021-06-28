@@ -5,7 +5,7 @@ import io.github.butkoprojects.bots.util.annotation.MessageRequest;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MessageRequestAnnotationProcessor implements AnnotationProcessor<MessageRequest> {
+public class MessageRequest_AnnotationProcessor implements AnnotationProcessor<MessageRequest> {
 
     @Override
     public Class getAnnotationClass() {

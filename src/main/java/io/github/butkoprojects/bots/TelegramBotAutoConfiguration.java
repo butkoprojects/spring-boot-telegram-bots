@@ -40,14 +40,14 @@ import java.util.List;
         DefaultBotRequestHandler.class,
         DefaultControllerFactory.class,
         DefaultControllerBuilder.class,
-        MessageRequestAnnotationProcessor.class,
-        CallbackKeyboardAnnotationProcessor.class,
-        CallbackButtonRowAnnotationProcessor.class,
-        CallbackButtonAnnotationProcessor.class,
-        KeyboardAnnotationProcessor.class,
-        KeyBoardRowAnnotationProcessor.class,
-        KeyBoardButtonAnnotationProcessor.class,
-        CallbackRequestAnnotationProcessor.class,
+        MessageRequest_AnnotationProcessor.class,
+        CallbackKeyboard_AnnotationProcessor.class,
+        CallbackButtonRow_AnnotationProcessor.class,
+        CallbackButton_AnnotationProcessor.class,
+        Keyboard_AnnotationProcessor.class,
+        KeyBoardRow_AnnotationProcessor.class,
+        KeyBoardButton_AnnotationProcessor.class,
+        CallbackRequest_AnnotationProcessor.class,
         TelegramUpdateHandlerBeanPostProcessor.class
 })
 public class TelegramBotAutoConfiguration {

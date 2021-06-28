@@ -8,7 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import java.util.function.Predicate;
 
 @Component
-public class CallbackRequestAnnotationProcessor implements AnnotationProcessor<CallbackRequest> {
+public class CallbackRequest_AnnotationProcessor implements AnnotationProcessor<CallbackRequest> {
 
     @Override
     public Class getAnnotationClass() {

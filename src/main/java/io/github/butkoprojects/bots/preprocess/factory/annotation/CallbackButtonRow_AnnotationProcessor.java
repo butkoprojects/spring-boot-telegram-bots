@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class CallbackButtonRowAnnotationProcessor implements AnnotationProcessor<CallbackButtonRow> {
+public class CallbackButtonRow_AnnotationProcessor implements AnnotationProcessor<CallbackButtonRow> {
 
     @Override
     public Class getAnnotationClass() {

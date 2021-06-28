@@ -2,8 +2,6 @@ package io.github.butkoprojects.bots.preprocess.factory.annotation;
 
 import io.github.butkoprojects.bots.preprocess.controller.builder.ControllerBuilder;
 import io.github.butkoprojects.bots.util.annotation.KeyBoardButton;
-import io.github.butkoprojects.bots.util.annotation.KeyBoardRow;
-import io.github.butkoprojects.bots.util.annotation.Keyboard;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
@@ -13,30 +11,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class KeyboardAnnotationProcessor implements AnnotationProcessor<Keyboard> {
+public class KeyBoardButton_AnnotationProcessor implements AnnotationProcessor<KeyBoardButton> {
 
     @Override
     public Class getAnnotationClass() {
-        return Keyboard.class;
+        return KeyBoardButton.class;
     }
 
     @Override
-    public void process( Keyboard keyBoard,
+    public void process( KeyBoardButton keyBoardButton,
                          ControllerBuilder builder ) {
-        if ( keyBoard != null ) {
+        if ( keyBoardButton != null ) {
             ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+            keyboardMarkup.setResizeKeyboard( true );
             final List<KeyboardRow> keyboardRows = new ArrayList<>();
-            for ( KeyBoardRow keyboardRow : keyBoard.value() ) {
-                KeyboardRow row = new KeyboardRow();
-                for ( KeyBoardButton keyBoardButton : keyboardRow.value() ) {
-                    KeyboardButton button = new KeyboardButton();
-                    button.setText( keyBoardButton.value() );
-                    button.setRequestContact( keyBoardButton.requestContact() );
-                    button.setRequestLocation( keyBoardButton.requestLocation() );
-                    row.add( button );
-                }
-                keyboardRows.add( row );
-            }
+            KeyboardRow keyboardRow = new KeyboardRow();
+
+            KeyboardButton button = new KeyboardButton();
+            button.setText( keyBoardButton.value() );
+            button.setRequestContact( keyBoardButton.requestContact() );
+            button.setRequestLocation( keyBoardButton.requestLocation() );
+            keyboardRow.add( button );
+
+            keyboardRows.add( keyboardRow );
             keyboardMarkup.setKeyboard( keyboardRows );
             builder.setKeyboardMarkup( keyboardMarkup );
         }
