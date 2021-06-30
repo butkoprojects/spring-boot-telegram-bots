@@ -1,7 +1,7 @@
 package io.github.butkoprojects.bots.preprocess.controller.builder;
 
 import io.github.butkoprojects.bots.preprocess.controller.BotApiMethodController;
-import io.github.butkoprojects.bots.util.annotation.CallbackRequest;
+import io.github.butkoprojects.bots.preprocess.annotation.CallbackRequest;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -21,6 +21,7 @@ public abstract class ControllerBuilder {
     private ReplyKeyboardMarkup keyboardMarkup;
     private InlineKeyboardMarkup inlineKeyboardMarkup;
     private String path;
+    private String controllerType;
 
     public abstract ControllerBuilder instance();
 
@@ -97,8 +98,16 @@ public abstract class ControllerBuilder {
         return inlineKeyboardMarkup;
     }
 
-    public ControllerBuilder setInlineKeyboardMarkup(InlineKeyboardMarkup inlineKeyboardMarkup) {
+    public ControllerBuilder setInlineKeyboardMarkup( InlineKeyboardMarkup inlineKeyboardMarkup ) {
         this.inlineKeyboardMarkup = inlineKeyboardMarkup;
         return this;
+    }
+
+    public String getControllerType() {
+        return controllerType;
+    }
+
+    public void setControllerType( String controllerType ) {
+        this.controllerType = controllerType;
     }
 }

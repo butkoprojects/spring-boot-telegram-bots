@@ -1,7 +1,9 @@
 package io.github.butkoprojects.bots.preprocess.factory.annotation;
 
 import io.github.butkoprojects.bots.preprocess.controller.builder.ControllerBuilder;
-import io.github.butkoprojects.bots.util.annotation.CallbackRequest;
+import io.github.butkoprojects.bots.preprocess.annotation.CallbackRequest;
+import io.github.butkoprojects.bots.preprocess.controller.type.BotControllerTypeEnum;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
@@ -14,6 +16,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 @Component
+@Order( 8 )
 public class CallbackRequest_AnnotationProcessor
         extends BaseAnnotationProcessor
         implements AnnotationProcessor<CallbackRequest> {
@@ -27,14 +30,11 @@ public class CallbackRequest_AnnotationProcessor
     public void process( CallbackRequest annotation,
                          ControllerBuilder builder ) {
 
-        Predicate<Update> updatePredicate = update ->
-                update != null &&
-                        update.hasCallbackQuery() &&
-                        update.getCallbackQuery().getData() != null;
-
         builder.setPath( annotation.value() );
-        builder.setControllerCouldBeExecuted( updatePredicate );
+        builder.setControllerCouldBeExecuted( BotControllerTypeEnum.CALLBACK.updatePredicate );
+        builder.setControllerType( BotControllerTypeEnum.CALLBACK.type );
         builder.setCallbackConfiguration( annotation );
+
         Function<Update, List<BotApiMethod>> processFunction =
                 isReturnTypeIsString( builder.getMethod() ) ?
                     processCallbackWithStringReturnType( builder ) :

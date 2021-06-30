@@ -1,8 +1,8 @@
 package io.github.butkoprojects.bots.preprocess.factory.annotation;
 
 import io.github.butkoprojects.bots.preprocess.controller.builder.ControllerBuilder;
-import io.github.butkoprojects.bots.util.annotation.KeyBoardButton;
-import io.github.butkoprojects.bots.util.annotation.KeyBoardRow;
+import io.github.butkoprojects.bots.preprocess.annotation.KeyBoardButton;
+import io.github.butkoprojects.bots.preprocess.annotation.KeyBoardRow;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;

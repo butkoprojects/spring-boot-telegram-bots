@@ -1,4 +1,4 @@
-package io.github.butkoprojects.bots.util.annotation;
+package io.github.butkoprojects.bots.preprocess.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,6 +7,6 @@ import java.lang.annotation.Target;
 
 @Target( {ElementType.METHOD, ElementType.ANNOTATION_TYPE} )
 @Retention( RetentionPolicy.RUNTIME )
-public @interface CallbackKeyboard {
-    CallbackButtonRow[] value();
+public @interface Keyboard {
+    KeyBoardRow[] value();
 }

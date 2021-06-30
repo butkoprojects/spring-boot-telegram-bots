@@ -1,6 +1,6 @@
 package io.github.butkoprojects.bots.preprocess.controller;
 
-import io.github.butkoprojects.bots.util.annotation.*;
+import io.github.butkoprojects.bots.preprocess.annotation.*;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.*;

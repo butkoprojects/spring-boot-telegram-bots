@@ -2,12 +2,10 @@ package io.github.butkoprojects.bots.preprocess.container;
 
 import io.github.butkoprojects.bots.preprocess.controller.BotApiMethodController;
 
-import java.util.List;
-
 public interface BotMethodContainer {
 
-    void addBotController(String path, BotApiMethodController controller );
+    void addBotController( String path, String controllerType, BotApiMethodController controller );
 
-    BotApiMethodController getBotApiMethodController( String path );
+    BotApiMethodController getBotApiMethodController( String path, String controllerType );
 
 }

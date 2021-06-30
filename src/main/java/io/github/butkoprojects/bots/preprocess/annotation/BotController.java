@@ -1,4 +1,4 @@
-package io.github.butkoprojects.bots.util.annotation;
+package io.github.butkoprojects.bots.preprocess.annotation;
 
 import org.springframework.stereotype.Component;
 

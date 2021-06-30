@@ -4,6 +4,9 @@ import io.github.butkoprojects.bots.preprocess.TelegramUpdateHandlerBeanPostProc
 import io.github.butkoprojects.bots.handler.DefaultBotRequestHandler;
 import io.github.butkoprojects.bots.preprocess.container.DefaultBotMethodContainer;
 import io.github.butkoprojects.bots.preprocess.controller.builder.DefaultControllerBuilder;
+import io.github.butkoprojects.bots.preprocess.controller.type.CallbackBotControllerType;
+import io.github.butkoprojects.bots.preprocess.controller.type.InlineBotControllerType;
+import io.github.butkoprojects.bots.preprocess.controller.type.MessageBotControllerType;
 import io.github.butkoprojects.bots.preprocess.factory.DefaultControllerFactory;
 import io.github.butkoprojects.bots.preprocess.factory.annotation.*;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +43,9 @@ import java.util.List;
         DefaultBotRequestHandler.class,
         DefaultControllerFactory.class,
         DefaultControllerBuilder.class,
+        MessageBotControllerType.class,
+        CallbackBotControllerType.class,
+        InlineBotControllerType.class,
         MessageRequest_AnnotationProcessor.class,
         CallbackKeyboard_AnnotationProcessor.class,
         CallbackButtonRow_AnnotationProcessor.class,
@@ -48,6 +54,7 @@ import java.util.List;
         KeyBoardRow_AnnotationProcessor.class,
         KeyBoardButton_AnnotationProcessor.class,
         CallbackRequest_AnnotationProcessor.class,
+        InlineRequest_AnnotationProcessor.class,
         TelegramUpdateHandlerBeanPostProcessor.class
 })
 public class TelegramBotAutoConfiguration {

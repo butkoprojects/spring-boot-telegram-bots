@@ -15,6 +15,10 @@ import java.util.function.Function;
 
 abstract class BaseAnnotationProcessor {
 
+    boolean isReturnTypeIsBotApiMethod( Method method ) {
+        return BotApiMethod.class.equals( method.getReturnType() );
+    }
+
     boolean isReturnTypeIsString( Method method ) {
         return String.class.equals( method.getReturnType() );
     }

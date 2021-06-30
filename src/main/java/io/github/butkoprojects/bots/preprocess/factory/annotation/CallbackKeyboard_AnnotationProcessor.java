@@ -1,9 +1,9 @@
 package io.github.butkoprojects.bots.preprocess.factory.annotation;
 
 import io.github.butkoprojects.bots.preprocess.controller.builder.ControllerBuilder;
-import io.github.butkoprojects.bots.util.annotation.CallbackButton;
-import io.github.butkoprojects.bots.util.annotation.CallbackButtonRow;
-import io.github.butkoprojects.bots.util.annotation.CallbackKeyboard;
+import io.github.butkoprojects.bots.preprocess.annotation.CallbackButton;
+import io.github.butkoprojects.bots.preprocess.annotation.CallbackButtonRow;
+import io.github.butkoprojects.bots.preprocess.annotation.CallbackKeyboard;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;

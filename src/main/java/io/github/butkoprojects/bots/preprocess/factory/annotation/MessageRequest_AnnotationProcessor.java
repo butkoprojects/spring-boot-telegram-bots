@@ -1,7 +1,9 @@
 package io.github.butkoprojects.bots.preprocess.factory.annotation;
 
 import io.github.butkoprojects.bots.preprocess.controller.builder.ControllerBuilder;
-import io.github.butkoprojects.bots.util.annotation.MessageRequest;
+import io.github.butkoprojects.bots.preprocess.annotation.MessageRequest;
+import io.github.butkoprojects.bots.preprocess.controller.type.BotControllerTypeEnum;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -14,6 +16,7 @@ import java.util.List;
 import java.util.function.Function;
 
 @Component
+@Order( 7 )
 public class MessageRequest_AnnotationProcessor
         extends BaseAnnotationProcessor
         implements AnnotationProcessor<MessageRequest> {
@@ -26,7 +29,8 @@ public class MessageRequest_AnnotationProcessor
     @Override
     public void process( MessageRequest annotation, ControllerBuilder builder ) {
         builder.setPath( annotation.value() );
-        builder.setControllerCouldBeExecuted( update -> update != null && update.hasMessage() && update.getMessage().hasText() );
+        builder.setControllerCouldBeExecuted( BotControllerTypeEnum.MESSAGE.updatePredicate );
+        builder.setControllerType( BotControllerTypeEnum.MESSAGE.type );
 
         Function<Update, List<BotApiMethod>> processFunction =
                 isReturnTypeIsString( builder.getMethod() ) ?
