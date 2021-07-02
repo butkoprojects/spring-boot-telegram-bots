@@ -1,19 +1,47 @@
 package io.github.butkoprojects.bots.preprocess.factory.annotation;
 
 import io.github.butkoprojects.bots.preprocess.controller.builder.ControllerBuilder;
+import io.github.butkoprojects.bots.preprocess.factory.MethodInvocationContext;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.*;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 
 abstract class BaseAnnotationProcessor {
+
+    protected MethodInvocationContext processMethodInvocation(ControllerBuilder builder, Update update) {
+        final MethodInvocationContext context = new MethodInvocationContext();
+        final List<Object> arguments = new ArrayList<>();
+        Arrays.stream( builder.getMethod().getParameters() ).forEach(param -> {
+                    if ( param.getType().equals( Update.class ) ) {
+                        arguments.add( update );
+                    }
+                    if ( param.getType().equals( Map.class ) ) {
+                        arguments.add( context.getParams() );
+                    }
+                }
+        );
+        try {
+            context.setResultObject( builder.getMethod().invoke( builder.getBean(), arguments.toArray() ) );
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new IllegalArgumentException(e);
+        }
+        return context;
+    }
+
+    boolean isMarkupIsInline( ReplyKeyboard keyboard ) {
+        return keyboard instanceof InlineKeyboardMarkup;
+    }
+
+    boolean isMarkupIsKeyboardMarkup( ReplyKeyboard keyboard ) {
+        return keyboard instanceof InlineKeyboardMarkup;
+    }
 
     boolean isReturnTypeIsBotApiMethod( Method method ) {
         return BotApiMethod.class.equals( method.getReturnType() );
@@ -29,25 +57,14 @@ abstract class BaseAnnotationProcessor {
 
     Function<Update, List<BotApiMethod>> processSingle( ControllerBuilder builder ) {
         return update -> {
-            BotApiMethod botApiMethod;
-            try {
-                botApiMethod = postProcessMethodInvocation( builder.getMethod().invoke( builder.getBean(), update), builder );
-            } catch (InvocationTargetException | IllegalAccessException e) {
-                throw new IllegalArgumentException(e);
-            }
+            BotApiMethod botApiMethod = (BotApiMethod) processMethodInvocation( builder, update ).getResultObject();
             return botApiMethod != null ? Collections.singletonList( botApiMethod ) : new ArrayList<>( 0 );
         };
     }
 
-    Function<Update, List<BotApiMethod>> processList( Method method,
-                                                      Object bean ) {
+    Function<Update, List<BotApiMethod>> processList( ControllerBuilder builder ) {
         return update -> {
-            List<BotApiMethod> botApiMethods;
-            try {
-                botApiMethods = (List<BotApiMethod>) method.invoke( bean, update );
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                throw new IllegalArgumentException(e);
-            }
+            List<BotApiMethod> botApiMethods = (List<BotApiMethod>) processMethodInvocation( builder, update ).getResultObject();
             return botApiMethods != null ? botApiMethods : new ArrayList<>( 0 );
         };
     }

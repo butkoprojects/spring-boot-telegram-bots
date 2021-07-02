@@ -31,7 +31,7 @@ public class InlineRequest_AnnotationProcessor
 
         Function<Update, List<BotApiMethod>> processFunction =
                 returnTypeIsList( builder.getMethod() ) ?
-                        processList( builder.getMethod(), builder.getBean() ) :
+                        processList( builder ) :
                         processSingle( builder );
         builder.setProcessFunction( processFunction );
     }

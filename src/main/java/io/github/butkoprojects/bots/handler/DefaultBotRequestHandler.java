@@ -21,7 +21,6 @@ public class DefaultBotRequestHandler implements BotRequestHandler {
     private List<BotControllerType> types;
 
     public BotApiMethodController determineController( Update update ) {
-        System.out.println();
         return types.stream()
                 .filter( type -> type.updatePredicate().test( update ) )
                 .findFirst()

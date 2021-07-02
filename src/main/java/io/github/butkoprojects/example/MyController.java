@@ -18,46 +18,6 @@ import java.util.List;
 @BotController
 public class MyController {
 
-    @MessageRequest( "/buttons" )
-    public SendMessage buttons( final Update update ) {
-        KeyboardButton button = new KeyboardButton();
-        button.setText("button1");
-
-        KeyboardRow row = new KeyboardRow();
-        row.add(button);
-
-        List<KeyboardRow> keyboardRows = new ArrayList<>();
-        keyboardRows.add(row);
-
-        ReplyKeyboardMarkup markup = new ReplyKeyboardMarkup();
-        markup.setKeyboard( keyboardRows );
-
-        return SendMessage.builder()
-                .replyMarkup( markup )
-                .chatId(String.valueOf(update.getMessage().getChatId()))
-                .text("Start message.")
-                .build();
-    }
-
-    @MessageRequest( "/start2" )
-    public SendMessage start( final Update update ) {
-        InlineKeyboardMarkup replyMarkup = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> keyBoardRows = new ArrayList<>();
-
-        InlineKeyboardButton moreButton = new InlineKeyboardButton();
-        moreButton.setText( "text" );
-        moreButton.setCallbackData( "more| some data" );
-
-        keyBoardRows.add( Arrays.asList( moreButton ) );
-        replyMarkup.setKeyboard( keyBoardRows );
-
-        return SendMessage.builder()
-                .replyMarkup( replyMarkup )
-                .chatId(String.valueOf(update.getMessage().getChatId()))
-                .text("Start message.")
-                .build();
-    }
-
     @CallbackRequest( value = "more", showAlert = false )
     public List<BotApiMethod> answerCallback( final Update update ) {
         return Arrays.asList(

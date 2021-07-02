@@ -2,6 +2,7 @@ package io.github.butkoprojects.example;
 
 import io.github.butkoprojects.bots.preprocess.annotation.BotController;
 import io.github.butkoprojects.bots.preprocess.annotation.InlineRequest;
+import io.github.butkoprojects.bots.preprocess.annotation.MessageRequest;
 import org.telegram.telegrambots.meta.api.methods.AnswerInlineQuery;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -13,7 +14,7 @@ import java.util.Arrays;
 @BotController
 public class InlineController {
 
-    @InlineRequest( "default" )
+    @InlineRequest
     public BotApiMethod process( Update update ) {
         AnswerInlineQuery answerInlineQuery = new AnswerInlineQuery();
         answerInlineQuery.setInlineQueryId( update.getInlineQuery().getId() );
@@ -30,5 +31,10 @@ public class InlineController {
         article.setThumbUrl( "https://i.ibb.co/w0NN0yg/thumbnail.jpg" );
         answerInlineQuery.setResults( Arrays.asList( article ) );
         return answerInlineQuery;
+    }
+
+    @MessageRequest( "dick" )
+    String dick( Update update ) {
+        return "ohh yeeeas!";
     }
 }

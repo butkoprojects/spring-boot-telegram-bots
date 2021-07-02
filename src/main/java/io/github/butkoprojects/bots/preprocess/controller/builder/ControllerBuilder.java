@@ -6,11 +6,16 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public abstract class ControllerBuilder {
     private Object bean;
@@ -22,6 +27,8 @@ public abstract class ControllerBuilder {
     private InlineKeyboardMarkup inlineKeyboardMarkup;
     private String path;
     private String controllerType;
+    private InlineKeyboardMarkup inlineKeyboardMarkupCopy;
+    private boolean inlineKeyboardUpdated;
 
     public abstract ControllerBuilder instance();
 
@@ -98,8 +105,57 @@ public abstract class ControllerBuilder {
         return inlineKeyboardMarkup;
     }
 
+    public InlineKeyboardMarkup updateInlineKeyboardMarkupWithValues( final Map<String, String> values ) {
+        if ( inlineKeyboardUpdated ) {
+            inlineKeyboardMarkup = copyInlineKeyboard( inlineKeyboardMarkupCopy );
+            inlineKeyboardUpdated = false;
+        }
+        if ( !values.isEmpty() ) {
+            if (inlineKeyboardMarkup.getKeyboard().stream().anyMatch(row ->
+                    row.stream().anyMatch(button -> button.getText().startsWith("$")))) {
+                inlineKeyboardMarkup.getKeyboard().forEach(row ->
+                        row.forEach(button -> {
+                            final String key = button.getText().substring(1);
+                            if (values.containsKey(key)) {
+                                button.setText(values.get(key));
+                            }
+                        })
+                );
+            }
+            if (inlineKeyboardMarkup.getKeyboard().stream().anyMatch(row ->
+                    row.stream().anyMatch(button -> button.getCallbackData().startsWith("$")))) {
+                inlineKeyboardMarkup.getKeyboard().forEach(row ->
+                        row.forEach(button -> {
+                            final String key = button.getCallbackData().substring(1).split("\\|")[0];
+                            if (values.containsKey(key)) {
+                                button.setCallbackData(values.get(key));
+                            }
+                        })
+                );
+            }
+        }
+        inlineKeyboardUpdated = true;
+        return inlineKeyboardMarkup;
+    }
+
+    private InlineKeyboardMarkup copyInlineKeyboard( InlineKeyboardMarkup original ) {
+        InlineKeyboardMarkup.InlineKeyboardMarkupBuilder builder = InlineKeyboardMarkup.builder();
+        original.getKeyboard().forEach( row -> {
+            builder.keyboardRow( row.stream().map( button -> {
+                    InlineKeyboardButton resultButton = new InlineKeyboardButton();
+                    resultButton.setText( button.getText() );
+                    resultButton.setCallbackData( button.getCallbackData() );
+
+                    return resultButton;
+                } ).collect(Collectors.toList())
+            );
+        });
+        return builder.build();
+    }
+
     public ControllerBuilder setInlineKeyboardMarkup( InlineKeyboardMarkup inlineKeyboardMarkup ) {
         this.inlineKeyboardMarkup = inlineKeyboardMarkup;
+        this.inlineKeyboardMarkupCopy = copyInlineKeyboard( inlineKeyboardMarkup );
         return this;
     }
 

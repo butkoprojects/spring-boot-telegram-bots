@@ -17,7 +17,7 @@ public enum BotControllerTypeEnum {
     INLINE(
             "inline",
             update -> update != null && update.hasInlineQuery() && update.getInlineQuery() != null && update.getInlineQuery().getQuery() != null,
-            update -> { return "default"; }
+            update -> "default"
     );
 
     public final String type;

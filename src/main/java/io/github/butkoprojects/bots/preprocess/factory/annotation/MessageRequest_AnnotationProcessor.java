@@ -36,7 +36,7 @@ public class MessageRequest_AnnotationProcessor
                 isReturnTypeIsString( builder.getMethod() ) ?
                     processNonBotApiReturnType( builder ) :
                     returnTypeIsList( builder.getMethod() ) ?
-                        processList( builder.getMethod(), builder.getBean() ) :
+                        processList( builder ) :
                         processSingle( builder );
         builder.setProcessFunction( processFunction );
     }
@@ -47,12 +47,7 @@ public class MessageRequest_AnnotationProcessor
                     builder.getKeyboardMarkup() != null ? builder.getKeyboardMarkup()
                             : builder.getInlineKeyboardMarkup() != null ? builder.getInlineKeyboardMarkup()
                             : null;
-            Object returnObject;
-            try {
-                returnObject = builder.getMethod().invoke( builder.getBean(), update );
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                throw new IllegalArgumentException(e);
-            }
+            Object returnObject = processMethodInvocation( builder, update ).getResultObject();
             List<BotApiMethod> resultList = new ArrayList<>();
             if ( returnObject != null ) {
                 if ( List.class.equals( returnObject.getClass() ) ) {
