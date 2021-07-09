@@ -25,9 +25,9 @@ public abstract class ControllerBuilder {
     private CallbackRequest callbackConfiguration;
     private ReplyKeyboardMarkup keyboardMarkup;
     private InlineKeyboardMarkup inlineKeyboardMarkup;
+    private InlineKeyboardMarkup inlineKeyboardMarkupCopy;
     private String path;
     private String controllerType;
-    private InlineKeyboardMarkup inlineKeyboardMarkupCopy;
     private boolean inlineKeyboardUpdated;
 
     public abstract ControllerBuilder instance();

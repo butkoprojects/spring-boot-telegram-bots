@@ -11,12 +11,12 @@ public class SecondController {
 
     @MessageRequest( "/hola" )
     @CallbackButtonRow({
-            @CallbackButton( text = "hola", call = "answer", data = "something"),
-            @CallbackButton( text = "aloh", call = "answer2", data = "something")
+            @CallbackButton( name = "hola", call = "answer", data = "something"),
+            @CallbackButton( name = "aloh", call = "answer2", data = "something")
     })
     @CallbackButtonRow({
-            @CallbackButton( text = "time", call = "time", data = "something"),
-            @CallbackButton( text = "skool", call = "more", data = "something")
+            @CallbackButton( name = "time", call = "time", data = "something"),
+            @CallbackButton( name = "skool", call = "more", data = "something")
     })
     public String callback() {
         return "hi hi hi hi hi hi";
@@ -24,8 +24,8 @@ public class SecondController {
 
     @CallbackRequest( "answer" )
     @CallbackButtonRow({
-            @CallbackButton( text = "changedWithText", call = "answer", data = "something"),
-            @CallbackButton( text = "changedWithText2", call = "answer2", data = "something")
+            @CallbackButton( name = "changedWithText", call = "answer", data = "something"),
+            @CallbackButton( name = "changedWithText2", call = "answer2", data = "something")
     })
     public String answerCallback() {
         return "text changed";
@@ -33,8 +33,8 @@ public class SecondController {
 
     @CallbackRequest( "answer2" )
     @CallbackButtonRow({
-            @CallbackButton( text = "$someText", call = "$answer", data = "something"),
-            @CallbackButton( text = "changedWithoutText2", call = "answer2", data = "something")
+            @CallbackButton( name = "$someText", call = "$answer", data = "something"),
+            @CallbackButton( name = "changedWithoutText2", call = "answer2", data = "something")
     })
     public void answerCallback2( final Map<String, String> params ) {
         params.put("someText", "ebaaaaaaaaaaaaaaat");
@@ -47,8 +47,8 @@ public class SecondController {
     }
 
     @CallbackRequest( value = "time" )
-    @CallbackButton( text = "$time", call = "time", data = "something")
-    @CallbackButton( text = "$time", call = "time", data = "something")
+    @CallbackButton( name = "$time", call = "time", data = "something")
+    @CallbackButton( name = "$time", call = "time", data = "something")
     public String showTime( final Map<String, String> params ) {
         params.put( "time", String.valueOf( System.currentTimeMillis() ) );
         return params.get( "time" );
@@ -65,8 +65,14 @@ public class SecondController {
                 .build();
     }
 
+    @MessageRequest( "button1" )
+    @KeyBoardButton( "new button" )
+    public String button1() {
+        return "response on button1";
+    }
+
     @MessageRequest( "/home" )
-    @KeyBoardButton( value = "eto home bitch", requestContact = true )
+    @KeyBoardRow({ @KeyBoardButton("button1"), @KeyBoardButton("button1") })
     public String home( final Update update )
     {
         return "Home";

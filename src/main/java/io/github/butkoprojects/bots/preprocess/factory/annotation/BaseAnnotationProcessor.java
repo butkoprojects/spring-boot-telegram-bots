@@ -57,7 +57,7 @@ abstract class BaseAnnotationProcessor {
 
     Function<Update, List<BotApiMethod>> processSingle( ControllerBuilder builder ) {
         return update -> {
-            BotApiMethod botApiMethod = (BotApiMethod) processMethodInvocation( builder, update ).getResultObject();
+            BotApiMethod botApiMethod = postProcessMethodInvocation( processMethodInvocation( builder, update ).getResultObject(), builder );
             return botApiMethod != null ? Collections.singletonList( botApiMethod ) : new ArrayList<>( 0 );
         };
     }
@@ -69,7 +69,7 @@ abstract class BaseAnnotationProcessor {
         };
     }
 
-    BotApiMethod postProcessMethodInvocation(Object result, ControllerBuilder builder) throws InvocationTargetException, IllegalAccessException {
+    BotApiMethod postProcessMethodInvocation(Object result, ControllerBuilder builder) {
         ReplyKeyboard keyboard = null;
         if ( builder.getKeyboardMarkup() != null ) {
             keyboard = builder.getKeyboardMarkup();

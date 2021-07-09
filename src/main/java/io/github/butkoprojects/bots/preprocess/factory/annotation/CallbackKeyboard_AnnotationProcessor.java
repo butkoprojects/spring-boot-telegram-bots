@@ -32,7 +32,7 @@ public class CallbackKeyboard_AnnotationProcessor implements AnnotationProcessor
                 List<InlineKeyboardButton> keyboardRow = new ArrayList<>();
                 for ( CallbackButton button: row.value() ) {
                     InlineKeyboardButton inlineButton = new InlineKeyboardButton();
-                    inlineButton.setText( button.text() );
+                    inlineButton.setText( button.name() );
                     inlineButton.setCallbackData( button.call() + "|" + button.data() );
                     keyboardRow.add( inlineButton );
                 }

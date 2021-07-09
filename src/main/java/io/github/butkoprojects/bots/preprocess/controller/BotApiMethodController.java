@@ -60,7 +60,7 @@ public class BotApiMethodController {
                     List<InlineKeyboardButton> keyboardRow = new ArrayList<>();
                     for ( CallbackButton button: row.value() ) {
                         InlineKeyboardButton inlineButton = new InlineKeyboardButton();
-                        inlineButton.setText( button.text() );
+                        inlineButton.setText( button.name() );
                         inlineButton.setCallbackData( button.call() + "|" + button.data() );
                         keyboardRow.add( inlineButton );
                     }
@@ -79,7 +79,7 @@ public class BotApiMethodController {
                 List<InlineKeyboardButton> keyboardRow = new ArrayList<>();
                 for ( CallbackButton button: callbackButtonRow.value() ) {
                     InlineKeyboardButton inlineButton = new InlineKeyboardButton();
-                    inlineButton.setText( button.text() );
+                    inlineButton.setText( button.name() );
                     inlineButton.setCallbackData( button.call() + "|" + button.data() );
                     keyboardRow.add( inlineButton );
                 }
@@ -97,7 +97,7 @@ public class BotApiMethodController {
                 List<InlineKeyboardButton> keyboardRow = new ArrayList<>();
 
                 InlineKeyboardButton inlineButton = new InlineKeyboardButton();
-                inlineButton.setText( callbackButton.text() );
+                inlineButton.setText( callbackButton.name() );
                 inlineButton.setCallbackData( callbackButton.call() + "|" + callbackButton.data() );
                 keyboardRow.add( inlineButton );
 

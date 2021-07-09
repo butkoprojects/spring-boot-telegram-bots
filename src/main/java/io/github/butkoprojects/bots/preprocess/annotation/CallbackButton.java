@@ -7,7 +7,7 @@ import java.lang.annotation.*;
 @Repeatable( CallbackButtonRow.class )
 public @interface CallbackButton {
 
-    String text() default "";
+    String name() default "";
 
     String call() default "";
 

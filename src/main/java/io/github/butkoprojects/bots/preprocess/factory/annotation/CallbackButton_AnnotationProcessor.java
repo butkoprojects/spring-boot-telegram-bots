@@ -28,7 +28,7 @@ public class CallbackButton_AnnotationProcessor implements AnnotationProcessor<C
             List<InlineKeyboardButton> keyboardRow = new ArrayList<>();
 
             InlineKeyboardButton inlineButton = new InlineKeyboardButton();
-            inlineButton.setText( callbackButton.text() );
+            inlineButton.setText( callbackButton.name() );
             inlineButton.setCallbackData( callbackButton.call() + "|" + callbackButton.data() );
             keyboardRow.add( inlineButton );
 
