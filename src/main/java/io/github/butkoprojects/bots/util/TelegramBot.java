@@ -10,27 +10,34 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public abstract class TelegramBot extends TelegramLongPollingBot {
 
     @Autowired
     private BotRequestHandler handler;
 
+    private ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
     @Override
     public void onUpdateReceived( Update update ) {
         BotApiMethodController controller = handler.determineController( update );
-        List<BotApiMethod> botApiMethods = controller.process( update );
-        if ( botApiMethods != null && botApiMethods.isEmpty() ) {
-            updateReceived( update );
-        } else {
-            botApiMethods.forEach( this::executeWithoutCheckedException );
-        }
+        executor.execute( () -> {
+            List<BotApiMethod> botApiMethods = controller.process( update );
+            if ( botApiMethods != null && botApiMethods.isEmpty() ) {
+                updateReceived( update );
+            } else {
+                Objects.requireNonNull( botApiMethods ).forEach( this::executeWithoutCheckedException );
+            }
+        } );
     }
 
-    private Message executeWithoutCheckedException(final BotApiMethod method ) {
+    private Message executeWithoutCheckedException( final BotApiMethod method ) {
         try {
             Object result = execute( method );
-            if ( result instanceof Message) {
+            if ( result instanceof Message ) {
                 return (Message) result;
             } else return null;
         } catch ( TelegramApiException e ) {
