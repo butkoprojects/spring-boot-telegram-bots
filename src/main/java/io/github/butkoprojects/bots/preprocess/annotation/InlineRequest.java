@@ -7,6 +7,7 @@ import java.lang.annotation.Target;
 
 @Target( {ElementType.METHOD, ElementType.ANNOTATION_TYPE} )
 @Retention( RetentionPolicy.RUNTIME )
+@ControllerAnnotation
 public @interface InlineRequest {
 
     String value() default "default";

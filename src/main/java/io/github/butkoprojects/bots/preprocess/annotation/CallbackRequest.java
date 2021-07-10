@@ -7,6 +7,7 @@ import java.lang.annotation.Target;
 
 @Target( {ElementType.METHOD, ElementType.ANNOTATION_TYPE} )
 @Retention( RetentionPolicy.RUNTIME )
+@ControllerAnnotation
 public @interface CallbackRequest {
 
     String value() default "";
@@ -14,4 +15,5 @@ public @interface CallbackRequest {
     boolean showAlert() default false;
 
     int cacheTime() default 0;
+
 }
