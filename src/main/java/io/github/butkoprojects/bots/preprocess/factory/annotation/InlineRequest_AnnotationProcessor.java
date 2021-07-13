@@ -29,7 +29,7 @@ public class InlineRequest_AnnotationProcessor
         builder.setControllerCouldBeExecuted( BotControllerTypeEnum.INLINE.updatePredicate );
         builder.setControllerType( BotControllerTypeEnum.INLINE.type );
 
-        Function<Update, List<BotApiMethod>> processFunction =
+        Function<Update, List<Object>> processFunction =
                 returnTypeIsList( builder.getMethod() ) ?
                         processList( builder ) :
                         processSingle( builder );

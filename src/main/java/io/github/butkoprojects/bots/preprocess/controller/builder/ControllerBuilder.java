@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public abstract class ControllerBuilder {
     private Object bean;
     private Method method;
-    private Function<Update, List<BotApiMethod>> processFunction;
+    private Function<Update, List<Object>> processFunction;
     private Predicate<Update> controllerShouldBeExecuted;
     private CallbackRequest callbackConfiguration;
     private ReplyKeyboardMarkup keyboardMarkup;
@@ -74,11 +74,11 @@ public abstract class ControllerBuilder {
         return this;
     }
 
-    public Function<Update, List<BotApiMethod>> getProcessFunction() {
+    public Function<Update, List<Object>> getProcessFunction() {
         return processFunction;
     }
 
-    public ControllerBuilder setProcessFunction(Function<Update, List<BotApiMethod>> processUpdate) {
+    public ControllerBuilder setProcessFunction(Function<Update, List<Object>> processUpdate) {
         this.processFunction = processUpdate;
         return this;
     }

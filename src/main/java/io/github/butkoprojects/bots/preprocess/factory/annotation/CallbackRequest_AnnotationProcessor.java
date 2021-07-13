@@ -37,7 +37,7 @@ public class CallbackRequest_AnnotationProcessor
         builder.setControllerType( BotControllerTypeEnum.CALLBACK.type );
         builder.setCallbackConfiguration( annotation );
 
-        Function<Update, List<BotApiMethod>> processFunction =
+        Function<Update, List<Object>> processFunction =
                 builder.getInlineKeyboardMarkup() != null ?
                         editMessage( builder ) :
                             isReturnTypeIsString( builder.getMethod() ) ?
@@ -48,9 +48,9 @@ public class CallbackRequest_AnnotationProcessor
         builder.setProcessFunction( processFunction );
     }
 
-    private Function<Update, List<BotApiMethod>> editMessage( ControllerBuilder builder ) {
+    private Function<Update, List<Object>> editMessage( ControllerBuilder builder ) {
         return update -> {
-            List<BotApiMethod> resultList = new ArrayList<>();
+            List<Object> resultList = new ArrayList<>();
 
             if ( builder.getMethod().getReturnType().equals( Void.TYPE ) ) {
                 editMessageMarkup( builder, update, resultList );
@@ -63,7 +63,7 @@ public class CallbackRequest_AnnotationProcessor
 
     private void editMessageMarkup( ControllerBuilder builder,
                                     Update update,
-                                    List<BotApiMethod> resultList ) {
+                                    List<Object> resultList ) {
         MethodInvocationContext context = processMethodInvocation( builder, update );
         builder.updateInlineKeyboardMarkupWithValues( context.getParams() );
 
@@ -80,7 +80,7 @@ public class CallbackRequest_AnnotationProcessor
 
     private void editMessageTextAndMarkup( ControllerBuilder builder,
                                            Update update,
-                                           List<BotApiMethod> resultList ) {
+                                           List<Object> resultList ) {
         MethodInvocationContext context = processMethodInvocation( builder, update );
         builder.updateInlineKeyboardMarkupWithValues( context.getParams() );
 
@@ -97,9 +97,9 @@ public class CallbackRequest_AnnotationProcessor
         }
     }
 
-    private Function<Update, List<BotApiMethod>> processCallbackWithStringReturnType( ControllerBuilder builder ) {
+    private Function<Update, List<Object>> processCallbackWithStringReturnType( ControllerBuilder builder ) {
         return update -> {
-            List<BotApiMethod> resultList = new ArrayList<>();
+            List<Object> resultList = new ArrayList<>();
             MethodInvocationContext context = processMethodInvocation( builder, update );
             if ( context.getResultObject() != null ) {
                 resultList.add(

@@ -1,6 +1,5 @@
 package io.github.butkoprojects.bots.preprocess.controller;
 
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -14,7 +13,7 @@ public class FakeBotApiMethodController extends BotApiMethodController {
     }
 
     @Override
-    public List<BotApiMethod> process(Update update ) {
+    public List<Object> process(Update update ) {
         SendMessage.SendMessageBuilder builder = SendMessage.builder();
         return Collections.singletonList( builder.text( "default" ).chatId( determineChatId( update ) ).build() );
     }

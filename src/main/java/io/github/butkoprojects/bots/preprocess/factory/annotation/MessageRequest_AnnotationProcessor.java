@@ -32,7 +32,7 @@ public class MessageRequest_AnnotationProcessor
         builder.setControllerCouldBeExecuted( BotControllerTypeEnum.MESSAGE.updatePredicate );
         builder.setControllerType( BotControllerTypeEnum.MESSAGE.type );
 
-        Function<Update, List<BotApiMethod>> processFunction =
+        Function<Update, List<Object>> processFunction =
                 isReturnTypeIsString( builder.getMethod() ) ?
                     processNonBotApiReturnType( builder ) :
                     returnTypeIsList( builder.getMethod() ) ?
@@ -41,14 +41,14 @@ public class MessageRequest_AnnotationProcessor
         builder.setProcessFunction( processFunction );
     }
 
-    private Function<Update, List<BotApiMethod>> processNonBotApiReturnType( ControllerBuilder builder ) {
+    private Function<Update, List<Object>> processNonBotApiReturnType( ControllerBuilder builder ) {
         return update -> {
             ReplyKeyboard keyboard =
                     builder.getKeyboardMarkup() != null ? builder.getKeyboardMarkup()
                             : builder.getInlineKeyboardMarkup() != null ? builder.getInlineKeyboardMarkup()
                             : null;
             Object returnObject = processMethodInvocation( builder, update ).getResultObject();
-            List<BotApiMethod> resultList = new ArrayList<>();
+            List<Object> resultList = new ArrayList<>();
             if ( returnObject != null ) {
                 if ( List.class.equals( returnObject.getClass() ) ) {
                     ( ( List ) returnObject ).forEach( obj ->

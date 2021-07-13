@@ -55,21 +55,21 @@ abstract class BaseAnnotationProcessor {
         return List.class.equals( method.getReturnType() );
     }
 
-    Function<Update, List<BotApiMethod>> processSingle( ControllerBuilder builder ) {
+    Function<Update, List<Object>> processSingle( ControllerBuilder builder ) {
         return update -> {
-            BotApiMethod botApiMethod = postProcessMethodInvocation( processMethodInvocation( builder, update ).getResultObject(), builder );
+            Object botApiMethod = postProcessMethodInvocation( processMethodInvocation( builder, update ).getResultObject(), builder );
             return botApiMethod != null ? Collections.singletonList( botApiMethod ) : new ArrayList<>( 0 );
         };
     }
 
-    Function<Update, List<BotApiMethod>> processList( ControllerBuilder builder ) {
+    Function<Update, List<Object>> processList( ControllerBuilder builder ) {
         return update -> {
-            List<BotApiMethod> botApiMethods = (List<BotApiMethod>) processMethodInvocation( builder, update ).getResultObject();
+            List<Object> botApiMethods = (List<Object>) processMethodInvocation( builder, update ).getResultObject();
             return botApiMethods != null ? botApiMethods : new ArrayList<>( 0 );
         };
     }
 
-    BotApiMethod postProcessMethodInvocation(Object result, ControllerBuilder builder) {
+    Object postProcessMethodInvocation(Object result, ControllerBuilder builder) {
         ReplyKeyboard keyboard = null;
         if ( builder.getKeyboardMarkup() != null ) {
             keyboard = builder.getKeyboardMarkup();
@@ -77,12 +77,9 @@ abstract class BaseAnnotationProcessor {
         if ( builder.getInlineKeyboardMarkup() != null ) {
             keyboard = builder.getInlineKeyboardMarkup();
         }
-        if ( keyboard != null ) {
+        if ( keyboard != null && result instanceof BotApiMethod ) {
             if (result instanceof SendMessage) {
                 ((SendMessage) result).setReplyMarkup(keyboard);
-            }
-            if (result instanceof SendAnimation) {
-                ((SendAnimation) result).setReplyMarkup(keyboard);
             }
             if (result instanceof SendContact) {
                 ((SendContact) result).setReplyMarkup(keyboard);
@@ -90,34 +87,16 @@ abstract class BaseAnnotationProcessor {
             if (result instanceof SendDice) {
                 ((SendDice) result).setReplyMarkup(keyboard);
             }
-            if (result instanceof SendDocument) {
-                ((SendDocument) result).setReplyMarkup(keyboard);
-            }
             if (result instanceof SendGame) {
                 ((SendGame) result).setReplyMarkup(keyboard);
             }
             if (result instanceof SendLocation) {
                 ((SendLocation) result).setReplyMarkup(keyboard);
             }
-            if (result instanceof SendPhoto) {
-                ((SendPhoto) result).setReplyMarkup(keyboard);
-            }
-            if (result instanceof SendSticker) {
-                ((SendSticker) result).setReplyMarkup(keyboard);
-            }
             if (result instanceof SendVenue) {
                 ((SendVenue) result).setReplyMarkup(keyboard);
             }
-            if (result instanceof SendVideo) {
-                ((SendVideo) result).setReplyMarkup(keyboard);
-            }
-            if (result instanceof SendVideoNote) {
-                ((SendVideoNote) result).setReplyMarkup(keyboard);
-            }
-            if (result instanceof SendVoice) {
-                ((SendVoice) result).setReplyMarkup(keyboard);
-            }
         }
-        return ( BotApiMethod ) result;
+        return result;
     }
 }
