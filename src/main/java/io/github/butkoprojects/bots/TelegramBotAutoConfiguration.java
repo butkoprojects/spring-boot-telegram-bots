@@ -1,5 +1,6 @@
 package io.github.butkoprojects.bots;
 
+import io.github.butkoprojects.bots.handler.processor.*;
 import io.github.butkoprojects.bots.preprocess.TelegramUpdateHandlerBeanPostProcessor;
 import io.github.butkoprojects.bots.handler.DefaultBotRequestHandler;
 import io.github.butkoprojects.bots.preprocess.container.DefaultBotMethodContainer;
@@ -55,6 +56,16 @@ import java.util.List;
         KeyBoardButton_AnnotationProcessor.class,
         CallbackRequest_AnnotationProcessor.class,
         InlineRequest_AnnotationProcessor.class,
+        BotApiMethodProcessor.class,
+        SendPhotoBotMethodProcessor.class,
+        SendVoiceBotMethodProcessor.class,
+        SendVideoBotMethodProcessor.class,
+        SendVideoNoteBotMethodProcessor.class,
+        SendDocumentBotMethodProcessor.class,
+        SendStickerBotMethodProcessor.class,
+        SendAnimationBotMethodProcessor.class,
+        SendMediaGroupBotMethodProcessor.class,
+        SendAudioBotMethodProcessor.class,
         TelegramUpdateHandlerBeanPostProcessor.class
 })
 public class TelegramBotAutoConfiguration {
