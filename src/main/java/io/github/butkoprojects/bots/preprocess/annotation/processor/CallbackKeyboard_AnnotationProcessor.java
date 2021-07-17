@@ -1,4 +1,4 @@
-package io.github.butkoprojects.bots.preprocess.factory.annotation;
+package io.github.butkoprojects.bots.preprocess.annotation.processor;
 
 import io.github.butkoprojects.bots.preprocess.controller.builder.ControllerBuilder;
 import io.github.butkoprojects.bots.preprocess.annotation.CallbackButton;

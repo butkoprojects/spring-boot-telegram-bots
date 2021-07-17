@@ -1,8 +1,7 @@
-package io.github.butkoprojects.bots.preprocess.factory.annotation;
+package io.github.butkoprojects.bots.preprocess.annotation.processor;
 
 import io.github.butkoprojects.bots.preprocess.controller.builder.ControllerBuilder;
 import io.github.butkoprojects.bots.preprocess.annotation.KeyBoardButton;
-import io.github.butkoprojects.bots.preprocess.annotation.KeyBoardRow;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -13,28 +12,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-@Order( 5 )
-public class KeyBoardRow_AnnotationProcessor implements AnnotationProcessor<KeyBoardRow> {
+@Order( 6 )
+public class KeyBoardButton_AnnotationProcessor implements AnnotationProcessor<KeyBoardButton> {
 
     @Override
-    public Class<KeyBoardRow> getAnnotationClass() {
-        return KeyBoardRow.class;
+    public Class<KeyBoardButton> getAnnotationClass() {
+        return KeyBoardButton.class;
     }
 
     @Override
-    public void process( KeyBoardRow rowAnnotation,
+    public void process( KeyBoardButton keyBoardButton,
                          ControllerBuilder builder ) {
-        if ( rowAnnotation != null ) {
+        if ( keyBoardButton != null ) {
             ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+            keyboardMarkup.setResizeKeyboard( true );
             final List<KeyboardRow> keyboardRows = new ArrayList<>();
             KeyboardRow keyboardRow = new KeyboardRow();
-            for ( KeyBoardButton keyBoardButton :rowAnnotation.value() ) {
-                KeyboardButton button = new KeyboardButton();
-                button.setText( keyBoardButton.value() );
-                button.setRequestContact( keyBoardButton.requestContact() );
-                button.setRequestLocation( keyBoardButton.requestLocation() );
-                keyboardRow.add( button );
-            }
+
+            KeyboardButton button = new KeyboardButton();
+            button.setText( keyBoardButton.value() );
+            button.setRequestContact( keyBoardButton.requestContact() );
+            button.setRequestLocation( keyBoardButton.requestLocation() );
+            keyboardRow.add( button );
+
             keyboardRows.add( keyboardRow );
             keyboardMarkup.setKeyboard( keyboardRows );
             builder.setKeyboardMarkup( keyboardMarkup );

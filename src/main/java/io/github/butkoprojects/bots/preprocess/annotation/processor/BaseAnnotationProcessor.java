@@ -1,4 +1,4 @@
-package io.github.butkoprojects.bots.preprocess.factory.annotation;
+package io.github.butkoprojects.bots.preprocess.annotation.processor;
 
 import io.github.butkoprojects.bots.preprocess.controller.builder.ControllerBuilder;
 import io.github.butkoprojects.bots.preprocess.factory.MethodInvocationContext;
@@ -67,6 +67,16 @@ abstract class BaseAnnotationProcessor {
             List<Object> botApiMethods = (List<Object>) processMethodInvocation( builder, update ).getResultObject();
             return botApiMethods != null ? botApiMethods : new ArrayList<>( 0 );
         };
+    }
+
+    void processList( ControllerBuilder builder, Update update, List<Object> resultList ) {
+        List<Object> botApiMethods = (List<Object>) processMethodInvocation( builder, update ).getResultObject();
+        resultList.addAll( botApiMethods != null ? botApiMethods : new ArrayList<>( 0 ) );
+    }
+
+    void processSingle( ControllerBuilder builder, Update update, List<Object> resultList ) {
+        Object botApiMethod = postProcessMethodInvocation( processMethodInvocation( builder, update ).getResultObject(), builder );
+        resultList.addAll( botApiMethod != null ? Collections.singletonList( botApiMethod ) : new ArrayList<>( 0 ) );
     }
 
     Object postProcessMethodInvocation(Object result, ControllerBuilder builder) {

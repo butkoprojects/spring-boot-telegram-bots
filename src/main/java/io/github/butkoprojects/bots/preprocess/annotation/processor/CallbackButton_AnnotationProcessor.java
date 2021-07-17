@@ -1,8 +1,7 @@
-package io.github.butkoprojects.bots.preprocess.factory.annotation;
+package io.github.butkoprojects.bots.preprocess.annotation.processor;
 
 import io.github.butkoprojects.bots.preprocess.controller.builder.ControllerBuilder;
 import io.github.butkoprojects.bots.preprocess.annotation.CallbackButton;
-import io.github.butkoprojects.bots.preprocess.annotation.CallbackButtonRow;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -12,28 +11,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-@Order( 2 )
-public class CallbackButtonRow_AnnotationProcessor implements AnnotationProcessor<CallbackButtonRow> {
+@Order( 3 )
+public class CallbackButton_AnnotationProcessor implements AnnotationProcessor<CallbackButton> {
 
     @Override
-    public Class<CallbackButtonRow> getAnnotationClass() {
-        return CallbackButtonRow.class;
+    public Class<CallbackButton> getAnnotationClass() {
+        return CallbackButton.class;
     }
 
     @Override
-    public void process( CallbackButtonRow callbackButtonRow,
+    public void process( CallbackButton callbackButton,
                          ControllerBuilder builder ) {
-        if ( callbackButtonRow != null ) {
+        if ( callbackButton != null ) {
             InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
             List<List<InlineKeyboardButton>> keyBoardRows = new ArrayList<>();
-
             List<InlineKeyboardButton> keyboardRow = new ArrayList<>();
-            for ( CallbackButton button: callbackButtonRow.value() ) {
-                InlineKeyboardButton inlineButton = new InlineKeyboardButton();
-                inlineButton.setText( button.name() );
-                inlineButton.setCallbackData( button.call() + "|" + button.data() );
-                keyboardRow.add( inlineButton );
-            }
+
+            InlineKeyboardButton inlineButton = new InlineKeyboardButton();
+            inlineButton.setText( callbackButton.name() );
+            inlineButton.setCallbackData( callbackButton.call() + "|" + callbackButton.data() );
+            keyboardRow.add( inlineButton );
 
             keyBoardRows.add( keyboardRow );
             inlineKeyboardMarkup.setKeyboard( keyBoardRows );
