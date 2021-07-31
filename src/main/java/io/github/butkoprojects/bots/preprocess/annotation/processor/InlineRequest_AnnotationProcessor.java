@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 @Component
@@ -17,20 +18,18 @@ public class InlineRequest_AnnotationProcessor
         implements AnnotationProcessor<InlineRequest> {
 
     @Override
-    public Class<InlineRequest> getAnnotationClass() {
-        return InlineRequest.class;
-    }
-
-    @Override
     public void process( InlineRequest annotation, ControllerBuilder builder ) {
         builder.setPath( annotation.value() );
         builder.setControllerCouldBeExecuted( BotControllerTypeEnum.INLINE.updatePredicate );
         builder.setControllerType( BotControllerTypeEnum.INLINE.type );
 
-        Function<Update, List<Object>> processFunction =
-                returnTypeIsList( builder.getMethod() ) ?
-                        processList( builder ) :
-                        processSingle( builder );
-        builder.setProcessFunction( processFunction );
+        Consumer<Update> processFunction = update -> {
+            if ( returnTypeIsList(builder.getMethod())) {
+                processList(builder, update);
+            } else {
+                processSingle(builder, update);
+            }
+        };
+        builder.addProcessConsumer( processFunction );
     }
 }

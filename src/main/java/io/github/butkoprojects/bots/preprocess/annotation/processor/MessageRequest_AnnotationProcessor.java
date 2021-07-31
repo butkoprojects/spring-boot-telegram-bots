@@ -11,6 +11,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 @Component
@@ -20,51 +21,45 @@ public class MessageRequest_AnnotationProcessor
         implements AnnotationProcessor<MessageRequest> {
 
     @Override
-    public Class<MessageRequest> getAnnotationClass() {
-        return MessageRequest.class;
-    }
-
-    @Override
     public void process( MessageRequest annotation, ControllerBuilder builder ) {
         builder.setPath( annotation.value() );
         builder.setControllerCouldBeExecuted( BotControllerTypeEnum.MESSAGE.updatePredicate );
         builder.setControllerType( BotControllerTypeEnum.MESSAGE.type );
 
-        Function<Update, List<Object>> processFunction =
-                isReturnTypeIsString( builder.getMethod() ) ?
-                    processNonBotApiReturnType( builder ) :
-                    returnTypeIsList( builder.getMethod() ) ?
-                        processList( builder ) :
-                        processSingle( builder );
-        builder.setProcessFunction( processFunction );
+        Consumer<Update> updateConsumer = update -> {
+            if (isReturnTypeIsString(builder.getMethod())) {
+                processNonBotApiReturnType(builder, update);
+            } else if (returnTypeIsList(builder.getMethod())) {
+                processList(builder, update);
+            } else {
+                processSingle(builder, update);
+            }
+        };
+        builder.addProcessConsumer( updateConsumer );
     }
 
-    private Function<Update, List<Object>> processNonBotApiReturnType( ControllerBuilder builder ) {
-        return update -> {
+    private void processNonBotApiReturnType(ControllerBuilder builder, Update update ) {
             ReplyKeyboard keyboard =
                     builder.getKeyboardMarkup() != null ? builder.getKeyboardMarkup()
                             : builder.getInlineKeyboardMarkup() != null ? builder.getInlineKeyboardMarkup()
                             : null;
             Object returnObject = processMethodInvocation( builder, update ).getResultObject();
-            List<Object> resultList = new ArrayList<>();
             if ( returnObject != null ) {
                 if ( List.class.equals( returnObject.getClass() ) ) {
                     ( ( List ) returnObject ).forEach( obj ->
-                            resultList.add( SendMessage.builder()
+                            builder.getResultList().add( SendMessage.builder()
                                     .text( String.valueOf( obj ) )
                                     .replyMarkup( keyboard )
                                     .chatId( String.valueOf( update.getMessage().getChatId() ) )
                                     .build() )
                     );
                 } else {
-                    resultList.add( SendMessage.builder()
+                    builder.getResultList().add( SendMessage.builder()
                             .text( String.valueOf( returnObject ) )
                             .replyMarkup( keyboard )
                             .chatId( String.valueOf( update.getMessage().getChatId() ) )
                             .build() );
                 }
             }
-            return resultList;
-        };
     }
 }

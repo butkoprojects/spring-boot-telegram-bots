@@ -13,4 +13,5 @@ public @interface CallbackButton {
 
     String data() default "";
 
+    String url() default "";
 }

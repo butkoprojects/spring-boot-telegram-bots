@@ -12,6 +12,7 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageTe
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 @Component
@@ -19,11 +20,6 @@ import java.util.function.Function;
 public class CallbackRequest_AnnotationProcessor
         extends BaseAnnotationProcessor
         implements AnnotationProcessor<CallbackRequest> {
-
-    @Override
-    public Class<CallbackRequest> getAnnotationClass() {
-        return CallbackRequest.class;
-    }
 
     @Override
     public void process(CallbackRequest annotation,
@@ -34,30 +30,27 @@ public class CallbackRequest_AnnotationProcessor
         builder.setControllerType(BotControllerTypeEnum.CALLBACK.type);
         builder.setCallbackConfiguration(annotation);
 
-        Function<Update, List<Object>> processFunction = update -> {
-            List<Object> resultList = new ArrayList<>();
+        Consumer<Update> updateConsumer = update -> {
             if (builder.getInlineKeyboardMarkup() != null) {
-                editMessage(builder, update, resultList);
+                editMessage(builder, update);
             }
             if ( isReturnTypeIsString(builder.getMethod()) ) {
-                processCallbackWithStringReturnType(builder, update, resultList);
+                processCallbackWithStringReturnType(builder, update);
             } else if ( returnTypeIsList(builder.getMethod()) ) {
-                processList(builder, update, resultList);
+                processList(builder, update);
             } else {
-                processSingle(builder, update, resultList);
+                processSingle(builder, update);
             }
-            return resultList;
         };
-        builder.setProcessFunction(processFunction);
+        builder.addProcessConsumer(updateConsumer);
     }
 
     private void editMessage(ControllerBuilder builder,
-                             Update update,
-                             List<Object> resultList) {
+                             Update update) {
         if (builder.getMethod().getReturnType().equals(Void.TYPE)) {
-            editMessageMarkup(builder, update, resultList);
+            editMessageMarkup(builder, update, builder.getResultList());
         } else {
-            editMessageTextAndMarkup(builder, update, resultList);
+            editMessageTextAndMarkup(builder, update, builder.getResultList());
         }
     }
 
@@ -98,11 +91,10 @@ public class CallbackRequest_AnnotationProcessor
     }
 
     private void processCallbackWithStringReturnType(ControllerBuilder builder,
-                                                     Update update,
-                                                     List<Object> resultList) {
+                                                     Update update) {
         MethodInvocationContext context = processMethodInvocation(builder, update);
         if (context.getResultObject() != null) {
-            resultList.add(
+            builder.getResultList().add(
                     AnswerCallbackQuery.builder()
                             .callbackQueryId(update.getCallbackQuery().getId())
                             .text(String.valueOf(context.getResultObject()))

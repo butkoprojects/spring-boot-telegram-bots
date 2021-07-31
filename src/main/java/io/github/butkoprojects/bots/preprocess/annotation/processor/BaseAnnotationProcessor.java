@@ -3,6 +3,7 @@ package io.github.butkoprojects.bots.preprocess.annotation.processor;
 import io.github.butkoprojects.bots.preprocess.controller.builder.ControllerBuilder;
 import io.github.butkoprojects.bots.preprocess.factory.MethodInvocationContext;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.*;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -11,7 +12,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.function.Function;
 
 abstract class BaseAnnotationProcessor {
 
@@ -55,28 +55,14 @@ abstract class BaseAnnotationProcessor {
         return List.class.equals( method.getReturnType() );
     }
 
-    Function<Update, List<Object>> processSingle( ControllerBuilder builder ) {
-        return update -> {
-            Object botApiMethod = postProcessMethodInvocation( processMethodInvocation( builder, update ).getResultObject(), builder );
-            return botApiMethod != null ? Collections.singletonList( botApiMethod ) : new ArrayList<>( 0 );
-        };
-    }
-
-    Function<Update, List<Object>> processList( ControllerBuilder builder ) {
-        return update -> {
-            List<Object> botApiMethods = (List<Object>) processMethodInvocation( builder, update ).getResultObject();
-            return botApiMethods != null ? botApiMethods : new ArrayList<>( 0 );
-        };
-    }
-
-    void processList( ControllerBuilder builder, Update update, List<Object> resultList ) {
+    void processList( ControllerBuilder builder, Update update ) {
         List<Object> botApiMethods = (List<Object>) processMethodInvocation( builder, update ).getResultObject();
-        resultList.addAll( botApiMethods != null ? botApiMethods : new ArrayList<>( 0 ) );
+        builder.getResultList().addAll( botApiMethods != null ? botApiMethods : new ArrayList<>( 0 ) );
     }
 
-    void processSingle( ControllerBuilder builder, Update update, List<Object> resultList ) {
+    void processSingle( ControllerBuilder builder, Update update ) {
         Object botApiMethod = postProcessMethodInvocation( processMethodInvocation( builder, update ).getResultObject(), builder );
-        resultList.addAll( botApiMethod != null ? Collections.singletonList( botApiMethod ) : new ArrayList<>( 0 ) );
+        builder.getResultList().addAll( botApiMethod != null ? Collections.singletonList( botApiMethod ) : new ArrayList<>( 0 ) );
     }
 
     Object postProcessMethodInvocation(Object result, ControllerBuilder builder) {
@@ -105,6 +91,10 @@ abstract class BaseAnnotationProcessor {
             }
             if (result instanceof SendVenue) {
                 ((SendVenue) result).setReplyMarkup(keyboard);
+            }
+        } else if ( keyboard != null && result instanceof PartialBotApiMethod) {
+            if (result instanceof SendPhoto) {
+                ((SendPhoto) result).setReplyMarkup(keyboard);
             }
         }
         return result;

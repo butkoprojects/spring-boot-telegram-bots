@@ -1,8 +1,8 @@
 package io.github.butkoprojects.bots.preprocess.controller.builder;
 
+import com.google.common.collect.Lists;
 import io.github.butkoprojects.bots.preprocess.controller.BotApiMethodController;
 import io.github.butkoprojects.bots.preprocess.annotation.CallbackRequest;
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -13,14 +13,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public abstract class ControllerBuilder {
+
+    private final List<Object> resultList = new ArrayList<>();
     private Object bean;
     private Method method;
-    private Function<Update, List<Object>> processFunction;
+    private List<Consumer<Update>> processConsumers = new ArrayList<>();
     private Predicate<Update> controllerShouldBeExecuted;
     private CallbackRequest callbackConfiguration;
     private ReplyKeyboardMarkup keyboardMarkup;
@@ -35,7 +38,16 @@ public abstract class ControllerBuilder {
     public BotApiMethodController build() {
         return new BotApiMethodController(
                 controllerShouldBeExecuted,
-                processFunction );
+                update -> {
+                    processConsumers.forEach( updateConsumer -> updateConsumer.accept( update ) );
+                    List<Object> copyList = Lists.newArrayList( resultList.toArray() );
+                    resultList.clear();
+                    return copyList;
+                } );
+    }
+
+    public List<Object> getResultList() {
+        return resultList;
     }
 
     public String getPath() {
@@ -74,12 +86,12 @@ public abstract class ControllerBuilder {
         return this;
     }
 
-    public Function<Update, List<Object>> getProcessFunction() {
-        return processFunction;
+    public List<Consumer<Update>> getProcessConsumers() {
+        return processConsumers;
     }
 
-    public ControllerBuilder setProcessFunction(Function<Update, List<Object>> processUpdate) {
-        this.processFunction = processUpdate;
+    public ControllerBuilder addProcessConsumer( Consumer<Update> processUpdate) {
+        this.processConsumers.add( processUpdate );
         return this;
     }
 

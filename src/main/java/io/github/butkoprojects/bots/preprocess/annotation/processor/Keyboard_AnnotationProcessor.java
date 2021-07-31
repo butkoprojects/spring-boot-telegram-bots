@@ -18,11 +18,6 @@ import java.util.List;
 public class Keyboard_AnnotationProcessor implements AnnotationProcessor<Keyboard> {
 
     @Override
-    public Class<Keyboard> getAnnotationClass() {
-        return Keyboard.class;
-    }
-
-    @Override
     public void process( Keyboard keyBoard,
                          ControllerBuilder builder ) {
         if ( keyBoard != null ) {

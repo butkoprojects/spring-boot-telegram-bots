@@ -17,11 +17,6 @@ import java.util.List;
 public class KeyBoardRow_AnnotationProcessor implements AnnotationProcessor<KeyBoardRow> {
 
     @Override
-    public Class<KeyBoardRow> getAnnotationClass() {
-        return KeyBoardRow.class;
-    }
-
-    @Override
     public void process( KeyBoardRow rowAnnotation,
                          ControllerBuilder builder ) {
         if ( rowAnnotation != null ) {

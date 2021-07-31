@@ -66,6 +66,7 @@ import java.util.List;
         SendAnimationBotMethodProcessor.class,
         SendMediaGroupBotMethodProcessor.class,
         SendAudioBotMethodProcessor.class,
+        EditLastMessage_AnnotationProcessor.class,
         TelegramUpdateHandlerBeanPostProcessor.class
 })
 public class TelegramBotAutoConfiguration {

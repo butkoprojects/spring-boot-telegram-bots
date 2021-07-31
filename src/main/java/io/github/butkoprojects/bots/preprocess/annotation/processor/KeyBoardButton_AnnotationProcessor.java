@@ -16,11 +16,6 @@ import java.util.List;
 public class KeyBoardButton_AnnotationProcessor implements AnnotationProcessor<KeyBoardButton> {
 
     @Override
-    public Class<KeyBoardButton> getAnnotationClass() {
-        return KeyBoardButton.class;
-    }
-
-    @Override
     public void process( KeyBoardButton keyBoardButton,
                          ControllerBuilder builder ) {
         if ( keyBoardButton != null ) {

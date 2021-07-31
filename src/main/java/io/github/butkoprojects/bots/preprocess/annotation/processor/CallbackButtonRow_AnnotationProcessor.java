@@ -16,11 +16,6 @@ import java.util.List;
 public class CallbackButtonRow_AnnotationProcessor implements AnnotationProcessor<CallbackButtonRow> {
 
     @Override
-    public Class<CallbackButtonRow> getAnnotationClass() {
-        return CallbackButtonRow.class;
-    }
-
-    @Override
     public void process( CallbackButtonRow callbackButtonRow,
                          ControllerBuilder builder ) {
         if ( callbackButtonRow != null ) {
@@ -31,7 +26,10 @@ public class CallbackButtonRow_AnnotationProcessor implements AnnotationProcesso
             for ( CallbackButton button: callbackButtonRow.value() ) {
                 InlineKeyboardButton inlineButton = new InlineKeyboardButton();
                 inlineButton.setText( button.name() );
-                inlineButton.setCallbackData( button.call() + "|" + button.data() );
+                inlineButton.setUrl( button.url() );
+                if ( button.url().equals("") ) {
+                    inlineButton.setCallbackData(button.call() + "|" + button.data());
+                }
                 keyboardRow.add( inlineButton );
             }
 

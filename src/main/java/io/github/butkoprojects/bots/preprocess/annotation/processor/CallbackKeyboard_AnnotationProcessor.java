@@ -17,11 +17,6 @@ import java.util.List;
 public class CallbackKeyboard_AnnotationProcessor implements AnnotationProcessor<CallbackKeyboard> {
 
     @Override
-    public Class<CallbackKeyboard> getAnnotationClass() {
-        return CallbackKeyboard.class;
-    }
-
-    @Override
     public void process( CallbackKeyboard callbackKeyboard,
                          ControllerBuilder builder ) {
         if ( callbackKeyboard != null ) {

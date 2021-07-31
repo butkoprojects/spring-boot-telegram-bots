@@ -15,11 +15,6 @@ import java.util.List;
 public class CallbackButton_AnnotationProcessor implements AnnotationProcessor<CallbackButton> {
 
     @Override
-    public Class<CallbackButton> getAnnotationClass() {
-        return CallbackButton.class;
-    }
-
-    @Override
     public void process( CallbackButton callbackButton,
                          ControllerBuilder builder ) {
         if ( callbackButton != null ) {
@@ -29,7 +24,10 @@ public class CallbackButton_AnnotationProcessor implements AnnotationProcessor<C
 
             InlineKeyboardButton inlineButton = new InlineKeyboardButton();
             inlineButton.setText( callbackButton.name() );
-            inlineButton.setCallbackData( callbackButton.call() + "|" + callbackButton.data() );
+            inlineButton.setUrl( callbackButton.url() );
+            if ( callbackButton.url().equals("") ) {
+                inlineButton.setCallbackData(callbackButton.call() + "|" + callbackButton.data());
+            }
             keyboardRow.add( inlineButton );
 
             keyBoardRows.add( keyboardRow );
